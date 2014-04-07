@@ -5,8 +5,8 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/gpl.html
  * 
- * Contributor:
- *     WangKang. - initial API and implementation
+ * Contributors:
+ *    WangKang. - initial API and implementation
  ******************************************************************************/
 package org.wangk.comper.util;
 
@@ -14,6 +14,7 @@ package org.wangk.comper.util;
 import java.io.Serializable;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * 
@@ -27,37 +28,53 @@ public final class SimpleCache<K,V> implements Serializable {
 	private static final long serialVersionUID = 3159753264696995816L;
 
 	private final int size;
+    private ReentrantLock lock;
 
     private final ConcurrentHashMap<K,V> eden;
-
-    private final transient WeakHashMap<K,V> longterm;
-
+    private transient WeakHashMap<K,V> longterm;
+    
     public SimpleCache(int size) {
         this.size = size;
         this.eden = new ConcurrentHashMap<>(size * 4 / 3);
         this.longterm = new WeakHashMap<>(size * 4 / 3);
+        lock = new ReentrantLock(true);
     }
 
 	public V get(K k) {
 		V v = this.eden.get(k);
 		if (v == null) {
-			synchronized (longterm) {
-				v = this.longterm.get(k);
-				if (v != null) {
-					this.eden.put(k, v);
+			lock.lock();
+			try {
+				if (longterm == null) {
+					longterm = new WeakHashMap<K, V>(size * 4 / 3);
+					return null;
+				} else {
+					v = this.longterm.get(k);
+					if (v != null) {
+						this.eden.put(k, v);
+					}
 				}
+			} finally {
+				lock.unlock();
 			}
 		}
 		return v;
 	}
 
-    public void put(K k, V v) {
-        if (this.eden.size() >= size) {
-            synchronized (longterm) {
-                this.longterm.putAll(this.eden);
-            }
-            this.eden.clear();
-        }
-        this.eden.put(k, v);
-    }
+	public void put(K k, V v) {
+
+		if (this.eden.size() >= size) {
+			lock.lock();
+			try {
+				if (longterm == null) {
+					longterm = new WeakHashMap<K, V>(size * 4 / 3);
+				}
+				this.longterm.putAll(this.eden);
+				this.eden.clear();
+			} finally {
+				lock.unlock();
+			}
+		}
+		this.eden.put(k, v);
+	}
 }
