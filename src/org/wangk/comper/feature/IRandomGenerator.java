@@ -11,8 +11,8 @@
 package org.wangk.comper.feature;
 
 import java.util.List;
+import java.util.Set;
 
-import org.wangk.comper.feature.model.Config;
 import org.wangk.comper.feature.model.Group;
 import org.wangk.comper.util.Pair;
 
@@ -22,11 +22,11 @@ import org.wangk.comper.util.Pair;
  * @author BowenCai
  *
  */
-public interface IRandomGenerator extends Refreshable{
+public interface IRandomGenerator extends IRefreshable{
 
 	public Pair<Group, Group> pickFrom(List<Group> groupList);
 	
-	public List<Group> pickFrom(List<Group> groupList, float ratio);
+	public Set<Group> pickFrom(List<Group> groupList, float ratio);
 	
 	
 	public Config getConfig();

@@ -28,6 +28,46 @@ public class Constants {
 	public static final int MAX_GROUP = 64;
 	public static final int MAX_EVOLUTION = 16384;
 	
+	/**
+	 * 结果集大小
+	 */
+	public int numResult = 4;
+	
+	/**
+	 * 训练次数
+	 */
+	public int numTraining = 256;
+	
+	/**
+	 * 最多训练次数
+	 */
+	public int maxTraining = 1024;
+	
+	/**
+	 * 中间结果大小 
+	 */
+	public int numGroup = 16;
+
+	/**
+	 * 中间结果最大值
+	 */
+	public int maxGroup = 128;
+	
+	/**
+	 * 两两交叉的次数
+	 */
+	public int numCrossOver = 16;
+	
+	/**
+	 * 变异的组的比率
+	 */
+	public float ratioVariantGroup = 0.0F;
+	
+	/**
+	 * 一组内变异的比率
+	 */
+	public float ratioVariant;
+	
 	static {//	static_assert
 		
 //		Assert.isTrue(0 < NUM_EVOLUTION && NUM_EVOLUTION < 1024,

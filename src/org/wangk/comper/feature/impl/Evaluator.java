@@ -13,8 +13,8 @@ package org.wangk.comper.feature.impl;
 
 import java.util.List;
 
+import org.wangk.comper.feature.Config;
 import org.wangk.comper.feature.IEvaluator;
-import org.wangk.comper.feature.model.Config;
 import org.wangk.comper.feature.model.Group;
 
 

@@ -10,30 +10,52 @@
  ******************************************************************************/
 package org.wangk.comper.feature.impl;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
+import org.wangk.comper.feature.Config;
 import org.wangk.comper.feature.IRandomGenerator;
-import org.wangk.comper.feature.model.Config;
 import org.wangk.comper.feature.model.Group;
+import org.wangk.comper.util.Assert;
 import org.wangk.comper.util.Pair;
 
 public class RandomGenerator implements IRandomGenerator {
 
 	private Config config;
-
+	
 	@Override
 	public Pair<Group, Group> pickFrom(List<Group> groupList) {
-		return null;
+		Assert.notEmpty(groupList);
+		
+		ThreadLocalRandom random = ThreadLocalRandom.current();
+		int idx1 = random.nextInt(groupList.size());
+		int idx2 = idx1;
+		while (idx2 == idx1) {
+			idx2 = random.nextInt(groupList.size());
+		}
+		return new Pair<Group, Group>(groupList.get(idx1), groupList.get(idx2));
 	}
 	
 	@Override
-	public List<Group> pickFrom(List<Group> groupList, float ratio) {
-		return null;
+	public Set<Group> pickFrom(List<Group> groupList, float ratio) {
+		Assert.notEmpty(groupList);
+		
+		ThreadLocalRandom random = ThreadLocalRandom.current();
+		final int newSz = (int) (ratio * groupList.size());
+		Set<Group> newSet = new HashSet<Group>(newSz * 2);
+		while (newSet.size() < newSz) {
+			newSet.add(groupList.get(random.nextInt(groupList.size())));
+		}
+		return newSet;
 	}
+	
+	
 	
 	@Override
 	public void refresh(Config config) {
-		
+		this.config = config;
 	}
 	
 	@Override

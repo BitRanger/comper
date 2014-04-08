@@ -10,9 +10,8 @@
  ******************************************************************************/
 package org.wangk.comper.feature;
 
-import org.wangk.comper.feature.model.Config;
 
-public interface Refreshable {
+public interface IRefreshable {
 
 	public void refresh(Config config);
 	

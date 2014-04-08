@@ -8,12 +8,13 @@
  * Contributors:
  *    WangKang. - initial API and implementation
  ******************************************************************************/
-package org.wangk.comper.feature.model;
+package org.wangk.comper.feature;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import org.wangk.comper.feature.model.QuestionType;
 import org.wangk.comper.model.WKChapter;
 import org.wangk.comper.util.Assert;
 import org.wangk.comper.util.Pair;
@@ -44,13 +45,11 @@ public class Config implements Serializable {
 								SystemConfig inner) {
 
 		Config cg = new Config();
-		
 		cg.internal = inner;
 		
 		cg.difficulty = overallDifficulty;
 		cg.chapterList = totalChapters;
 		cg.typeScoreAndNum = section;
-		cg.numResult = numberOfResult;
 		cg.tolerance = tolerance;
 		
 		cg.updateTotalScore();

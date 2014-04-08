@@ -21,11 +21,9 @@ public class Group implements Serializable, Comparable<Group> {
 	private float adaptability;
 	
 	
-	
-	
 	@Override
 	public int compareTo(Group o) {
-		return (int)(this.adaptability - o.adaptability);
+		throw new UnsupportedOperationException();
 	}
 	
 	public float getAdaptability() {

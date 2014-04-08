@@ -11,12 +11,13 @@
 package org.wangk.comper.feature.impl;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.wangk.comper.feature.Config;
 import org.wangk.comper.feature.IRandomGenerator;
 import org.wangk.comper.feature.ITrainer;
-import org.wangk.comper.feature.model.Config;
 import org.wangk.comper.feature.model.Group;
 import org.wangk.comper.misc.Predicate;
 import org.wangk.comper.model.WKQuestionMeta;
@@ -28,11 +29,21 @@ public class Trainer implements ITrainer {
 
 	@Inject private IRandomGenerator 	randomGenerator;
 	
+
 	@Override
-	public List<Group> getInitGroupList() {
+	public List<Group> getInitGroupList(int size) {
 		return null;
 	}
 	
+	@Override
+	public List<Group> recruit(int size) {
+		return null;
+	}	
+	
+	@Override
+	public List<Group> teamUp(List<Group> t1, List<Group> t2) {
+		return null;
+	}
 	/**
 	 * @param predicate
 	 * @return remaining
@@ -58,7 +69,7 @@ public class Trainer implements ITrainer {
 	}
 	
 	@Override
-	public void bulkVariate(List<Group> groups, float ratio){
+	public void bulkVariate(Set<Group> groups, float ratio){
 		
 	}
 	

@@ -13,7 +13,6 @@ package org.wangk.comper.feature;
 
 import java.util.List;
 
-import org.wangk.comper.feature.model.Config;
 import org.wangk.comper.feature.model.Group;
 
 /**
@@ -21,7 +20,7 @@ import org.wangk.comper.feature.model.Group;
  * @author BowenCai
  *
  */
-public interface IEvaluator extends Refreshable {
+public interface IEvaluator extends IRefreshable {
 	
 	/**
 	 * 评估一个组的适应度，并将适应度设置给该组

@@ -23,7 +23,6 @@ import org.wangk.comper.context.config.FileInputStreamProvider;
 import org.wangk.comper.context.config.InputStreamCallback;
 import org.wangk.comper.context.config.InputStreamSupport;
 import org.wangk.comper.db.jdbc.JdbcAux;
-import org.wangk.comper.db.jdbc.stmt.UpdateStatementCreator;
 import org.wangk.comper.db.orm.RowMapping;
 import org.wangk.comper.model.Tag;
 

@@ -12,10 +12,10 @@ package org.wangk.comper.feature;
 
 
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.wangk.comper.feature.model.Config;
 import org.wangk.comper.feature.model.Group;
 import org.wangk.comper.util.Assert;
 import org.wangk.comper.util.Pair;
@@ -33,7 +33,7 @@ public class TrainingField {
 	@Inject private IEvaluator		 	evaluator;
 	@Inject private IRandomGenerator 	randomGenerator;
 	
-	private Config 						config;
+	private Config 	config;
 	public void setConfig(Config config) {
 		this.config = config;
 	}
@@ -48,7 +48,9 @@ public class TrainingField {
 		Assert.notNull(evaluator);
 		Assert.notNull(randomGenerator);
 		Assert.notNull(config);
-		currentGroupList = trainer.getInitGroupList();
+		
+		currentGroupList = null;
+		trainer.getInitGroupList(config.internal.numGroup);
 		trainingCount = 0;
 		resultGroupList = null;
 	}
@@ -58,10 +60,8 @@ public class TrainingField {
 	 * 
 	 */
 	public void train() {		
-
-		while (!evaluator.isQualified(currentGroupList)
-				&& trainingCount <= config.internal.maxTraining) {
-
+		
+		do {
 			int crossCount = 0;
 			while (crossCount <= config.internal.numCrossOver) {
 				Pair<Group, Group> pair = randomGenerator.pickFrom(currentGroupList);
@@ -73,7 +73,7 @@ public class TrainingField {
 				break;
 			}
 			
-			List<Group> toVariant = randomGenerator
+			Set<Group> toVariant = randomGenerator
 									.pickFrom(currentGroupList, 
 											config.internal.ratioVariantGroup);
 			
@@ -84,7 +84,8 @@ public class TrainingField {
 				break;
 			}
 			
-		}
+		} while (!evaluator.isQualified(currentGroupList)
+				&& trainingCount <= config.internal.maxTraining);
 	}
 	
 	
@@ -93,7 +94,12 @@ public class TrainingField {
 		this.trainer.refresh(config);
 		this.evaluator.refresh(config);
 		this.randomGenerator.refresh(config);
+		List<Group> oldGroups = currentGroupList;
 		prepare();
+		if (oldGroups != null) {
+			currentGroupList = oldGroups;
+			trainer.teamUp(currentGroupList, oldGroups);
+		}
 		train();
 	}
 	

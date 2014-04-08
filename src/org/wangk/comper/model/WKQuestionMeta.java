@@ -25,6 +25,9 @@ public class WKQuestionMeta implements Serializable, Comparable<WKQuestionMeta> 
 	public int				score;
 	public int				id_chapter;
 	
+	/**
+	 * 警告：此处的 hashCode， equals compareTo 不一致！
+	 */
 	@Override
 	public int compareTo(WKQuestionMeta o) {
 		return o.id - this.id;

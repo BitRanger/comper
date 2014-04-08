@@ -10,8 +10,20 @@
  ******************************************************************************/
 package org.wangk.comper.service;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import org.wangk.comper.db.orm.RowMapping;
 import org.wangk.comper.model.WKPaper;
 
 public interface IPaperService extends IDAO<WKPaper> {
-
+	
+	
+	public static final RowMapping<WKPaper> MAPPING = new RowMapping<WKPaper>() {
+		@Override
+		public WKPaper rowToObjec(ResultSet rs) throws SQLException {
+			WKPaper paper = new WKPaper();
+			return paper;
+		}
+	};
 }
