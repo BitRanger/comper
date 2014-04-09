@@ -11,6 +11,9 @@
 package org.wangk.comper.feature.model;
 
 import java.io.Serializable;
+import java.util.List;
+
+import org.wangk.comper.model.WKQuestionMeta;
 
 
 public class Group implements Serializable, Comparable<Group> {
@@ -18,27 +21,71 @@ public class Group implements Serializable, Comparable<Group> {
 	private static final long serialVersionUID = -2604770597064509121L;
 //	Map<QuestionType, List<WKQuestionMeta>> qs;
 	
-	private float adaptability;
+	public List<List<WKQuestionMeta> > allMetaLs;
+	public Summary summary = new Summary();
 	
+	public List<WKQuestionMeta> multiChoiceLs;
+	public List<WKQuestionMeta> fillblanksLs;
+	public List<WKQuestionMeta> trueFalseLs;
+	public List<WKQuestionMeta> simpleQALs;
+	public List<WKQuestionMeta> explainationLs;
+	public List<WKQuestionMeta> applicationLs;
+	
+	public static class Summary {
+		
+		public int stamp = -1;
+		public float coverage = -1.0F;
+		public float difficulty = -1.0F;
+		
+		public float adaptability = -1.0F;
+	}
 	
 	@Override
 	public int compareTo(Group o) {
-		throw new UnsupportedOperationException();
+		if (this.summary.adaptability > o.summary.adaptability) {
+			return 1;
+		} else if (this.summary.adaptability < o.summary.adaptability) {
+			return -1;
+		}
+		int thisBits = Float.floatToIntBits(this.summary.adaptability);
+		int anotherBits = Float.floatToIntBits(o.summary.adaptability);
+        return (thisBits == anotherBits ?  0 : // Values are equal
+            (thisBits < anotherBits ? -1 : // (-0.0, 0.0) or (!NaN, NaN)
+             1));
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((allMetaLs == null) ? 0 : allMetaLs.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof Group)) {
+			return false;
+		}
+		Group other = (Group) obj;
+		if (allMetaLs == null) {
+			if (other.allMetaLs != null) {
+				return false;
+			}
+		} else if (!allMetaLs.equals(other.allMetaLs)) {
+			return false;
+		}
+		return true;
 	}
 	
-	public float getAdaptability() {
-		return adaptability;
-	}
-	public void setAdaptability(float adaptability) {
-		this.adaptability = adaptability;
-	}
-	
-	
-//	MULTI_CHOICE(2),
-//	FILL_BLANKS(4),
-//	TRUE_FALSE(8),
-//	SIMPLE_QA(16),
-//	EXPLAINATION(32),
-//	APPLY_KNOWLEGE(64);
+
+
 	
 }

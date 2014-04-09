@@ -13,6 +13,7 @@ package org.wangk.comper.feature;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.wangk.comper.feature.model.QuestionType;
 import org.wangk.comper.model.WKChapter;
@@ -38,7 +39,7 @@ public class Config implements Serializable {
 	 * @return
 	 */
 	public static Config build(float overallDifficulty,
-								List<WKChapter> totalChapters,
+								Set<Integer> totalChapters,
 								Map<QuestionType, Pair<Integer, Integer>> section,
 								int numberOfResult,
 								float tolerance,
@@ -48,7 +49,7 @@ public class Config implements Serializable {
 		cg.internal = inner;
 		
 		cg.difficulty = overallDifficulty;
-		cg.chapterList = totalChapters;
+		cg.chapterIdSet = totalChapters;
 		cg.typeScoreAndNum = section;
 		cg.tolerance = tolerance;
 		
@@ -66,7 +67,7 @@ public class Config implements Serializable {
 	 * 用户设定的值
 	 */
 	private float						difficulty; // 期望的总体难度
-	private List<WKChapter> 			chapterList;//期望覆盖的章节（知识点）
+	private Set<Integer> 				chapterIdSet;//期望覆盖的章节（知识点）
 
 	private Map<QuestionType, Pair<Integer, Integer>>	
 									typeScoreAndNum;//每种题型的分值和题量
@@ -98,8 +99,8 @@ public class Config implements Serializable {
 		return difficulty;
 	}
 
-	public List<WKChapter> getChapterList() {
-		return chapterList;
+	public Set<Integer> getChapterIdSet() {
+		return chapterIdSet;
 	}
 
 	public Map<QuestionType, Pair<Integer, Integer>> getTypeScoreAndNum() {

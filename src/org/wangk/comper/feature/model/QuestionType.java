@@ -22,7 +22,7 @@ public enum QuestionType {
 	TRUE_FALSE(8),
 	SIMPLE_QA(16),
 	EXPLAINATION(32),
-	APPLY_KNOWLEGE(64);
+	APPLICATION(64);
 	
 	private final int value;
 
@@ -46,7 +46,7 @@ public enum QuestionType {
 		case 32:
 			return QuestionType.EXPLAINATION;
 		case 64:
-			return QuestionType.APPLY_KNOWLEGE;
+			return QuestionType.APPLICATION;
 		}
 
 		throw new IllegalArgumentException(

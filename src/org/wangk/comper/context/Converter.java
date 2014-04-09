@@ -49,7 +49,6 @@ public class Converter {
 	public static<T> Object castStr(String var, Class<T> type) {
 		
 		var = var.trim();
-		
 		if (type == String.class) {
 			return var;
 			

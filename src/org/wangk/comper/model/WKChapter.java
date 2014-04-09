@@ -21,6 +21,7 @@ public class WKChapter implements Serializable {
 	public Date 			time_create;
 	public String 			name;
 	public String 			description;
+	
 	public int getId() {
 		return id;
 	}
@@ -45,6 +46,7 @@ public class WKChapter implements Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

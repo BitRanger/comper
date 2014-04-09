@@ -21,6 +21,7 @@ import org.wangk.comper.feature.ITrainer;
 import org.wangk.comper.feature.model.Group;
 import org.wangk.comper.misc.Predicate;
 import org.wangk.comper.model.WKQuestionMeta;
+import org.wangk.comper.service.IQuestionService;
 import org.wangk.comper.util.Pair;
 
 public class Trainer implements ITrainer {
@@ -28,7 +29,7 @@ public class Trainer implements ITrainer {
 	private Config config;
 
 	@Inject private IRandomGenerator 	randomGenerator;
-	
+	@Inject private IQuestionService	questionSerive;
 
 	@Override
 	public List<Group> getInitGroupList(int size) {
@@ -66,11 +67,22 @@ public class Trainer implements ITrainer {
 	@Override
 	public void variate(Group group, float ratio){
 		
+		for (List<WKQuestionMeta> oneType : group.allMetaLs) {
+			
+			Set<WKQuestionMeta> toBeReplaced = randomGenerator.pickFrom(oneType, ratio);
+			for (WKQuestionMeta ques : toBeReplaced) {
+				List<WKQuestionMeta> cadi = questionSerive.getCandidates(ques);
+				WKQuestionMeta replacement = randomGenerator.pickSingle(cadi);
+				oneType.set(randomGenerator.pickInt(oneType.size()), replacement);
+			}
+		}
 	}
 	
 	@Override
 	public void bulkVariate(Set<Group> groups, float ratio){
-		
+		for (Group group : groups) {
+			variate(group, ratio);
+		}
 	}
 	
 	
@@ -99,6 +111,14 @@ public class Trainer implements ITrainer {
 	@Override
 	public void setRandomGenerator(IRandomGenerator randomGenerator) {
 		this.randomGenerator = randomGenerator;
+	}
+
+	public IQuestionService getQuestionSerive() {
+		return questionSerive;
+	}
+
+	public void setQuestionSerive(IQuestionService questionSerive) {
+		this.questionSerive = questionSerive;
 	}
 
 

@@ -31,5 +31,5 @@ public interface IQuestionService extends IDAO<WKQuestionMeta> {
 	
 	public Map<WKQuestionMeta, Triple<String, String, String>> 
 								LoadContentAnsComment(List<WKQuestionMeta> metaList);
-
+	
 }

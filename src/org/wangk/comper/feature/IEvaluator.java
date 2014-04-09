@@ -27,7 +27,7 @@ public interface IEvaluator extends IRefreshable {
 	 * @param group
 	 * @return
 	 */
-	public float evaluate(Group group);
+	public void evaluate(Group group);
 	/**
 	 * 评估一个表的组，依次将结果设置给每个组
 	 * @param groups
@@ -39,7 +39,7 @@ public interface IEvaluator extends IRefreshable {
 	 * @param groupList
 	 * @return
 	 */
-	public boolean isQualified(List<Group> groupList);
+	public boolean isQualified(List<Group>  group);
 	
 	public Config getConfig();
 

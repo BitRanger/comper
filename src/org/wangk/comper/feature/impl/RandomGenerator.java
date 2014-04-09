@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.w3c.dom.ls.LSInput;
 import org.wangk.comper.feature.Config;
 import org.wangk.comper.feature.IRandomGenerator;
 import org.wangk.comper.feature.model.Group;
@@ -24,9 +25,21 @@ import org.wangk.comper.util.Pair;
 public class RandomGenerator implements IRandomGenerator {
 
 	private Config config;
+
+
+	@Override
+	public int 	pickInt(int limit) {
+		return ThreadLocalRandom.current().nextInt(limit);
+	}
 	
 	@Override
-	public Pair<Group, Group> pickFrom(List<Group> groupList) {
+	public<T> T pickSingle(List<T> list) {
+		ThreadLocalRandom random = ThreadLocalRandom.current();
+		return list.get(random.nextInt(list.size()));
+	}
+	
+	@Override
+	public<T> Pair<T, T> pickFrom(List<T> groupList) {
 		Assert.notEmpty(groupList);
 		
 		ThreadLocalRandom random = ThreadLocalRandom.current();
@@ -35,16 +48,16 @@ public class RandomGenerator implements IRandomGenerator {
 		while (idx2 == idx1) {
 			idx2 = random.nextInt(groupList.size());
 		}
-		return new Pair<Group, Group>(groupList.get(idx1), groupList.get(idx2));
+		return new Pair<T, T>(groupList.get(idx1), groupList.get(idx2));
 	}
 	
 	@Override
-	public Set<Group> pickFrom(List<Group> groupList, float ratio) {
+	public<T> Set<T> pickFrom(List<T> groupList, float ratio) {
 		Assert.notEmpty(groupList);
 		
 		ThreadLocalRandom random = ThreadLocalRandom.current();
 		final int newSz = (int) (ratio * groupList.size());
-		Set<Group> newSet = new HashSet<Group>(newSz * 2);
+		Set<T> newSet = new HashSet<T>(newSz * 2);
 		while (newSet.size() < newSz) {
 			newSet.add(groupList.get(random.nextInt(groupList.size())));
 		}

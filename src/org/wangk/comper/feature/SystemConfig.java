@@ -26,7 +26,8 @@ public class SystemConfig implements Serializable {
 	public static SystemConfig getDefault() {
 		return null;
 	}
-	
+	public float weightCoverage = 0.6F;
+	public float weightDifficulty = 0.6F;
 	/**
 	 * 结果集大小
 	 */

@@ -24,9 +24,13 @@ import org.wangk.comper.util.Pair;
  */
 public interface IRandomGenerator extends IRefreshable{
 
-	public Pair<Group, Group> pickFrom(List<Group> groupList);
+
+	public int 				pickInt(int limit);
+	public<T> T 			pickSingle(List<T> list);
 	
-	public Set<Group> pickFrom(List<Group> groupList, float ratio);
+	public<T> Pair<T, T> 	pickFrom(List<T> groupList);
+	
+	public<T> Set<T> 		pickFrom(List<T> groupList, float ratio);
 	
 	
 	public Config getConfig();
