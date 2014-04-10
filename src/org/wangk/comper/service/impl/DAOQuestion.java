@@ -21,8 +21,6 @@ import org.wangk.comper.model.WKQuestionMeta;
 
 public class DAOQuestion {
 
-	
-	
 	public StatementCreator getUpdateStmt() {
 		
 		return new StatementCreator() {

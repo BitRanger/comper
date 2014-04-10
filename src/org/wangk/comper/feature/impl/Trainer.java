@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.wangk.comper.feature.impl;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -21,7 +22,8 @@ import org.wangk.comper.feature.ITrainer;
 import org.wangk.comper.feature.model.Group;
 import org.wangk.comper.misc.Predicate;
 import org.wangk.comper.model.WKQuestionMeta;
-import org.wangk.comper.service.IQuestionService;
+import org.wangk.comper.service.impl.QuestionService;
+import org.wangk.comper.util.Assert;
 import org.wangk.comper.util.Pair;
 
 public class Trainer implements ITrainer {
@@ -29,7 +31,7 @@ public class Trainer implements ITrainer {
 	private Config config;
 
 	@Inject private IRandomGenerator 	randomGenerator;
-	@Inject private IQuestionService	questionSerive;
+	@Inject private QuestionService	questionSerive;
 
 	@Override
 	public List<Group> getInitGroupList(int size) {
@@ -60,20 +62,33 @@ public class Trainer implements ITrainer {
 	}
 	
 	@Override
-	public void crossOver(Group group1, Group group2){
+	public void crossOver(Group group1, Group group2) {
 		
+		Assert.isTrue(group1.allMetaLs.size() == group2.allMetaLs.size(), "two group size mismatch");
+		for (int i = 0; i < group1.allMetaLs.size(); i++) {
+			List<WKQuestionMeta> g1OneType = group1.allMetaLs.get(i);
+			List<WKQuestionMeta> g2OneType = group2.allMetaLs.get(i);
+			Assert.isTrue(g1OneType.size() == g2OneType.size());
+			final int cutPoint = randomGenerator.pickInt(g2OneType.size());
+			for (int j = cutPoint; j < g1OneType.size(); j++) {
+				g2OneType.set(j, g1OneType.get(j));
+			}
+			for (int j = 0; j < cutPoint; j++) {
+				g1OneType.set(j, g2OneType.get(j));
+			}
+		}
 	}
 	
 	@Override
-	public void variate(Group group, float ratio){
+	public void variate(Group group, final float ratio){
 		
 		for (List<WKQuestionMeta> oneType : group.allMetaLs) {
-			
-			Set<WKQuestionMeta> toBeReplaced = randomGenerator.pickFrom(oneType, ratio);
-			for (WKQuestionMeta ques : toBeReplaced) {
-				List<WKQuestionMeta> cadi = questionSerive.getCandidates(ques);
-				WKQuestionMeta replacement = randomGenerator.pickSingle(cadi);
-				oneType.set(randomGenerator.pickInt(oneType.size()), replacement);
+
+			List<Integer> idxLs = randomGenerator.pickIdexes(oneType, ratio);
+			for (Integer i : idxLs) {
+				WKQuestionMeta ques = oneType.get(i);
+				Set<WKQuestionMeta> cadi = questionSerive.getCandidates(ques);
+				oneType.set(i, randomGenerator.pickSingle(cadi));
 			}
 		}
 	}

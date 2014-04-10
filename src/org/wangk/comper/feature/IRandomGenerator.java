@@ -27,11 +27,20 @@ public interface IRandomGenerator extends IRefreshable{
 
 	public int 				pickInt(int limit);
 	public<T> T 			pickSingle(List<T> list);
+	public<T> T 			pickSingle(Set<T> list);
 	
 	public<T> Pair<T, T> 	pickFrom(List<T> groupList);
 	
 	public<T> Set<T> 		pickFrom(List<T> groupList, float ratio);
-	
+
+	/**
+	 * 随机选一组元素，返回元素的下标
+	 * 
+	 * @param groupList
+	 * @param ratio
+	 * @return
+	 */
+	public<T> List<Integer> pickIdexes(List<T> groupList, float ratio);
 	
 	public Config getConfig();
 
