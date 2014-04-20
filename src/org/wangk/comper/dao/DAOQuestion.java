@@ -8,7 +8,7 @@
  * Contributors:
  *    WangKang. - initial API and implementation
  ******************************************************************************/
-package org.wangk.comper.service.impl;
+package org.wangk.comper.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,11 +25,13 @@ import org.wangk.comper.db.orm.RowMapping;
 import org.wangk.comper.feature.model.QuestionType;
 import org.wangk.comper.model.WKQuestionMeta;
 
+
+
 public class DAOQuestion {
 
-	//																			 difficulty
+	//	difficulty
 	private static final String SELECT = 
-		"SELECT id, id_paper, id_chapter, type, difficulty, score FROM wk_question_meta";
+		"SELECT id, id_paper, id_chapter, type, difficulty, score FROM wk_question_meta ";
 	
 	@Inject JdbcAux jdbcAux;
 	
@@ -75,8 +77,9 @@ public class DAOQuestion {
 			public PreparedStatement createStatement(Connection con)
 					throws SQLException {
 				PreparedStatement ps = con.prepareStatement(
-						"update wk_question_meta(id_paper, id_chapter, type, difficulty, score)"
-						+ "values(?,?,?,?,?)");
+						"update wk_question_meta "
+						+ "set id_paper=?, id_chapter=?, type=?,"
+						+ "difficulty=?, score=?");
 				ps.setInt(1, meta.id_paper);
 				ps.setInt(2, meta.id_chapter);
 				ps.setInt(3, meta.type.intValue());

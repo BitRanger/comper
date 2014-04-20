@@ -12,4 +12,4 @@
  * @author BowenCai
  *
  */
-package org.wangk.comper.service;
+package org.wangk.comper.dao;

@@ -1,6 +1,6 @@
-package org.wangk.comper.service.impl;
+package org.wangk.comper.dao;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,9 +23,10 @@ public class QuestionService {
 	
 	ConcurrentHashMap<Integer, WKQuestionMeta> AllQuestion;
 	
-	public HashMap<QuestionType, ConcurrentHashMap<Integer, WKQuestionMeta>> typeMap;
+	public EnumMap<QuestionType, ConcurrentHashMap<Integer, WKQuestionMeta>> typeMap;
 	
 	public QuestionService() {
+		typeMap = new EnumMap<>(QuestionType.class);
 		
 		typeMap.put(QuestionType.MULTI_CHOICE,  new ConcurrentHashMap<Integer, WKQuestionMeta>(256));
 		typeMap.put(QuestionType.FILL_BLANKS,  new ConcurrentHashMap<Integer, WKQuestionMeta>(256));

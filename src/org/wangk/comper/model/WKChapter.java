@@ -88,4 +88,9 @@ public class WKChapter implements Serializable {
 			return false;
 		return true;
 	}
+	@Override
+	public String toString() {
+		return "WKChapter [id=" + id + ", time_created=" + time_created
+				+ ", name=" + name + ", description=" + description + "]";
+	}
 }

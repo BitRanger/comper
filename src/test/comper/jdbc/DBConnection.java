@@ -1,20 +1,21 @@
 package test.comper.jdbc;
 
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.Statement;
-
-import javax.sql.DataSource;
-
 import org.wangk.comper.context.XMLBeanAssembler;
 import org.wangk.comper.context.config.FileInputStreamProvider;
 import org.wangk.comper.context.config.InputStreamCallback;
 import org.wangk.comper.context.config.InputStreamSupport;
+import org.wangk.comper.dao.DAOChapter;
+import org.wangk.comper.dao.DAOPaper;
+import org.wangk.comper.dao.DAOQuestion;
 import org.wangk.comper.db.jdbc.JdbcAux;
 
 public class DBConnection {
 
-	JdbcAux jdbc;
+	public JdbcAux jdbc;
+	public DAOPaper daoPaper;
+	public DAOChapter daoChapter;
+	public DAOQuestion daoQuestion;
 	
 	public void connect() {
 		
@@ -31,5 +32,12 @@ public class DBConnection {
 		});
 		
 		this.jdbc = assembler.getBean("jdbcAux");
+		this.daoChapter = assembler.getBean("daoChapter");
+		this.daoPaper = assembler.getBean("daoPaper");
+		this.daoQuestion = assembler.getBean("daoQuestion");
+//		<bean id="daoQuestion" class="org.wangk.comper.service.impl.DAOQuestion">
+//	<bean id="daoPaper" class="org.wangk.comper.dao.DAOPaper">
+//		<bean id="daoChapter" class="org.wangk.comper.dao.DAOChapter">
+	
 	}
 }

@@ -219,7 +219,6 @@ public class XMLBeanAssembler implements IBeanAssembler {
 			throw new IllegalStateException("class[" + bnClass.getName()
 					+ "] is interface and cannot be instantiated");
 		}
-
 		Object beanObj = bnClass.newInstance();
 
 		/**

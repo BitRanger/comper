@@ -24,14 +24,15 @@ public class WKPaper implements Serializable {
 	@Generated(value = { "" })
 	public int				id;
 	
-	@Generated(value = { "" })
-	public Timestamp 		time_published;
-	
-	public String			name_publisher;
 	
 	public String			name;
 	public String			description;
 	public int 				score;
+
+	public String			name_publisher;
+	
+	@Generated(value = { "" })
+	public Timestamp 		time_published;
 	
 	// calculated
 	public float			difficulty = -1.0F;

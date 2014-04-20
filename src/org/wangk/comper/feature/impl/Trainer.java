@@ -10,19 +10,18 @@
  ******************************************************************************/
 package org.wangk.comper.feature.impl;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.wangk.comper.dao.QuestionService;
 import org.wangk.comper.feature.Config;
 import org.wangk.comper.feature.IRandomGenerator;
 import org.wangk.comper.feature.ITrainer;
 import org.wangk.comper.feature.model.Group;
 import org.wangk.comper.misc.Predicate;
 import org.wangk.comper.model.WKQuestionMeta;
-import org.wangk.comper.service.impl.QuestionService;
 import org.wangk.comper.util.Assert;
 import org.wangk.comper.util.Pair;
 
@@ -134,11 +133,11 @@ public class Trainer implements ITrainer {
 		this.randomGenerator = randomGenerator;
 	}
 
-	public IQuestionService getQuestionSerive() {
+	public QuestionService getQuestionSerive() {
 		return questionSerive;
 	}
 
-	public void setQuestionSerive(IQuestionService questionSerive) {
+	public void setQuestionSerive(QuestionService questionSerive) {
 		this.questionSerive = questionSerive;
 	}
 
