@@ -61,13 +61,19 @@ public class Trainer implements ITrainer {
 		crossOver(pair.first, pair.second);
 	}
 	
+	/**
+	 * 将两份卷子进行交叉，
+	 * 每种题型都交叉
+	 */
 	@Override
 	public void crossOver(Group group1, Group group2) {
 		
-		Assert.isTrue(group1.allMetaLs.size() == group2.allMetaLs.size(), "two group size mismatch");
-		for (int i = 0; i < group1.allMetaLs.size(); i++) {
-			List<WKQuestionMeta> g1OneType = group1.allMetaLs.get(i);
-			List<WKQuestionMeta> g2OneType = group2.allMetaLs.get(i);
+		Assert.isTrue(group1.slots.size() == group2.slots.size(), 
+				"two group size mismatch");
+		
+		for (int i = 0; i < group1.slots.size(); i++) {
+			List<WKQuestionMeta> g1OneType = group1.slots.get(i);
+			List<WKQuestionMeta> g2OneType = group2.slots.get(i);
 			Assert.isTrue(g1OneType.size() == g2OneType.size());
 			final int cutPoint = randomGenerator.pickInt(g2OneType.size());
 			for (int j = cutPoint; j < g1OneType.size(); j++) {
@@ -82,7 +88,7 @@ public class Trainer implements ITrainer {
 	@Override
 	public void variate(Group group, final float ratio){
 		
-		for (List<WKQuestionMeta> oneType : group.allMetaLs) {
+		for (List<WKQuestionMeta> oneType : group.slots) {
 
 			List<Integer> idxLs = randomGenerator.pickIdexes(oneType, ratio);
 			for (Integer i : idxLs) {

@@ -6,13 +6,21 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.wangk.comper.feature.model.Group.Summary;
+import javax.inject.Inject;
+
 import org.wangk.comper.feature.model.QuestionType;
 import org.wangk.comper.model.WKQuestionMeta;
+import org.wangk.comper.util.Assert;
 
-
+/**
+ * 
+ * @author BowenCai
+ *
+ */
 public class QuestionService {
 
+	@Inject DAOQuestion daoQuestion;
+	
 	ConcurrentHashMap<Integer, WKQuestionMeta> AllQuestion;
 	
 	public HashMap<QuestionType, ConcurrentHashMap<Integer, WKQuestionMeta>> typeMap;
@@ -27,9 +35,16 @@ public class QuestionService {
 		typeMap.put(QuestionType.APPLICATION,  new ConcurrentHashMap<Integer, WKQuestionMeta>(256));
 		
 	}
-	
+	/**
+	 * 从数据库里读出所有题，分类存到槽里
+	 */
 	public void loadAll() {
+		Assert.notNull(daoQuestion);
 		
+		List<WKQuestionMeta> all = daoQuestion.getAll();
+		for (WKQuestionMeta meta : all) {
+			typeMap.get(meta.type).put(meta.id, meta);
+		}
 	}
 	
 	/**
@@ -46,5 +61,13 @@ public class QuestionService {
 			}
 		}
 		return cadi;
+	}
+
+	public DAOQuestion getDaoQuestion() {
+		return daoQuestion;
+	}
+
+	public void setDaoQuestion(DAOQuestion daoQuestion) {
+		this.daoQuestion = daoQuestion;
 	}
 }

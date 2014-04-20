@@ -11,14 +11,14 @@
 package org.wangk.comper.model;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 public class WKChapter implements Serializable {
 
 	private static final long serialVersionUID = -1959747962303882199L;
 	
 	public int 				id;
-	public Date 			time_create;
+	public Timestamp 		time_created;
 	public String 			name;
 	public String 			description;
 	
@@ -28,11 +28,12 @@ public class WKChapter implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public Date getTime_create() {
-		return time_create;
+
+	public Timestamp getTime_created() {
+		return time_created;
 	}
-	public void setTime_create(Date time_create) {
-		this.time_create = time_create;
+	public void setTime_created(Timestamp time_created) {
+		this.time_created = time_created;
 	}
 	public String getName() {
 		return name;
@@ -56,7 +57,7 @@ public class WKChapter implements Serializable {
 		result = prime * result + id;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result
-				+ ((time_create == null) ? 0 : time_create.hashCode());
+				+ ((time_created == null) ? 0 : time_created.hashCode());
 		return result;
 	}
 	@Override
@@ -80,10 +81,10 @@ public class WKChapter implements Serializable {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (time_create == null) {
-			if (other.time_create != null)
+		if (time_created == null) {
+			if (other.time_created != null)
 				return false;
-		} else if (!time_create.equals(other.time_create))
+		} else if (!time_created.equals(other.time_created))
 			return false;
 		return true;
 	}

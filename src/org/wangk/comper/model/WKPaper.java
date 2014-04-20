@@ -11,24 +11,32 @@
 package org.wangk.comper.model;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Generated;
 
 public class WKPaper implements Serializable {
 	
 	private static final long serialVersionUID = 4110862638764903675L;
-	
+
+	@Generated(value = { "" })
 	public int				id;
-	public Date 			time_published;
+	
+	@Generated(value = { "" })
+	public Timestamp 		time_published;
+	
 	public String			name_publisher;
 	
 	public String			name;
 	public String			description;
 	public int 				score;
-	public float			difficulty;
 	
-	
-	public List<Integer>	chapterList;
+	// calculated
+	public float			difficulty = -1.0F;
+	// calculated
+	public List<Integer>	chapterList = new ArrayList<Integer>();
 
 
 	public int getId() {
@@ -41,12 +49,12 @@ public class WKPaper implements Serializable {
 	}
 
 
-	public Date getTime_published() {
+	public Timestamp getTime_published() {
 		return time_published;
 	}
 
 
-	public void setTime_published(Date time_published) {
+	public void setTime_published(Timestamp time_published) {
 		this.time_published = time_published;
 	}
 

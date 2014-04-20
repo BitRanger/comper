@@ -62,6 +62,7 @@ public class TrainingField {
 	public void train() {		
 		
 		do {
+			//交叉
 			int crossCount = 0;
 			while (crossCount <= config.internal.numCrossOver) {
 				Pair<Group, Group> pair = randomGenerator.pickFrom(currentGroupList);
@@ -72,19 +73,17 @@ public class TrainingField {
 				resultGroupList = currentGroupList;
 				break;
 			}
-			
+			//选一部分出来
 			Set<Group> toVariant = randomGenerator
 									.pickFrom(currentGroupList, 
 											config.internal.ratioVariantGroup);
-			
+
+			//进行交叉，也就是从备选库里选同分值，同类型的题进行替换
 			trainer.bulkVariate(toVariant, config.internal.ratioVariant);
 			
-			if (evaluator.isQualified(currentGroupList)) {
-				resultGroupList = currentGroupList;
-				break;
-			}
+			resultGroupList = currentGroupList;
 			
-		} while (!evaluator.isQualified(currentGroupList)
+		} while (!evaluator.isQualified(resultGroupList)
 				&& trainingCount <= config.internal.maxTraining);
 	}
 	

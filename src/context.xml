@@ -2,9 +2,9 @@
 <beas>
 	<bean id="datasource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
 		<property name="driverClass" value="com.mysql.jdbc.Driver"/>
-		<property name="jdbcUrl" value="jdbc:mysql://localhost:3456/bw_web"/>
-		<property name="user" value="cbw"/>
-		<property name="password" value="dev-test"/>
+		<property name="jdbcUrl" value="jdbc:mysql://localhost:3456/wk_comper"/>
+		<property name="user" value="bitranger"/>
+		<property name="password" value="123456"/>
 		<property name="minPoolSize" value="1"/>
 		<property name="acquireIncrement" value="2"/>
 		<property name="maxPoolSize" value="8"/>
@@ -14,5 +14,15 @@
 	<bean id="jdbcAux" class="org.wangk.comper.db.jdbc.JdbcAux">
 		<property name="dataSource" ref="datasource"/>
 	</bean>
+	
+	<bean id="daoQuestion" class="org.wangk.comper.service.impl.DAOQuestion">
+		<property name="jdbcAux" ref="jdbcAux"/>
+	</bean>
+	
+	<bean id="questionService" class="org.wangk.comper.service.impl.QuestionService">
+		<property name="daoQuestion" ref="daoQuestion"/>
+	</bean>
+	
+	
 	
 </beas>

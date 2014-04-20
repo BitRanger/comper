@@ -27,6 +27,9 @@ public class Evaluator implements IEvaluator{
 	
 	private Config config;
 	
+	/**
+	 * 对比此卷子，如果发生改变就重新计算，
+	 */
 	@Override
 	public void evaluate(Group group) {
 		
@@ -60,6 +63,7 @@ public class Evaluator implements IEvaluator{
 		}
 	}
 	
+
 	@Override
 	public boolean isQualified(List<Group> groups) {
 		bulkEvaluate(groups);
@@ -71,7 +75,7 @@ public class Evaluator implements IEvaluator{
 	float getCoverage(Group group) {
 		
 		Set<Integer> chapterCovered = new HashSet<Integer>();
-		for (List<WKQuestionMeta> ls : group.allMetaLs) {
+		for (List<WKQuestionMeta> ls : group.slots) {
 			for (WKQuestionMeta meta : ls) {
 				chapterCovered.add(meta.id_chapter);
 			}
@@ -85,7 +89,7 @@ public class Evaluator implements IEvaluator{
 
 	float getDifficulty(Group group) {
 		float diffi = 0.0F;
-		for (List<WKQuestionMeta> ls : group.allMetaLs) {
+		for (List<WKQuestionMeta> ls : group.slots) {
 			for (WKQuestionMeta meta : ls) {
 				diffi += meta.score * meta.difficulty;
 			}

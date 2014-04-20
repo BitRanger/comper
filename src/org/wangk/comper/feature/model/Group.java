@@ -20,10 +20,13 @@ public class Group implements Serializable, Comparable<Group> {
 
 	private static final long serialVersionUID = -2604770597064509121L;
 //	Map<QuestionType, List<WKQuestionMeta>> qs;
-	
-	public List<List<WKQuestionMeta> > allMetaLs;
+
+	public List<List<WKQuestionMeta> > slots;
 	public Summary summary = new Summary();
 	
+	/**
+	 * 每种题型
+	 */
 	public List<WKQuestionMeta> multiChoiceLs;
 	public List<WKQuestionMeta> fillblanksLs;
 	public List<WKQuestionMeta> trueFalseLs;
@@ -31,6 +34,11 @@ public class Group implements Serializable, Comparable<Group> {
 	public List<WKQuestionMeta> explainationLs;
 	public List<WKQuestionMeta> applicationLs;
 	
+	/**
+	 * 记录卷子信息
+	 * @author BowenCai
+	 *
+	 */
 	public static class Summary {
 		
 		public int stamp = -1;
@@ -59,7 +67,7 @@ public class Group implements Serializable, Comparable<Group> {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((allMetaLs == null) ? 0 : allMetaLs.hashCode());
+				+ ((slots == null) ? 0 : slots.hashCode());
 		return result;
 	}
 
@@ -75,11 +83,11 @@ public class Group implements Serializable, Comparable<Group> {
 			return false;
 		}
 		Group other = (Group) obj;
-		if (allMetaLs == null) {
-			if (other.allMetaLs != null) {
+		if (slots == null) {
+			if (other.slots != null) {
 				return false;
 			}
-		} else if (!allMetaLs.equals(other.allMetaLs)) {
+		} else if (!slots.equals(other.slots)) {
 			return false;
 		}
 		return true;

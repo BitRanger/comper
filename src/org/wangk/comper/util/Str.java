@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
  */
 public class Str {
 
+
 	public static final String EMPTY_STR = "";
 	
 	public static class Patterns{

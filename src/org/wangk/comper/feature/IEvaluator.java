@@ -36,6 +36,10 @@ public interface IEvaluator extends IRefreshable {
 
 	/**
 	 * 评估该组是否符合预设的要求
+	 * 
+	 * 先对每组卷子进行评级，再按适应度从小到大排序
+	 * 如果最后一个（适应度最大的那个）卷子在误差范围内，就是合格的
+	 *
 	 * @param groupList
 	 * @return
 	 */
