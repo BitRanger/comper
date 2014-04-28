@@ -1,21 +1,16 @@
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.FlowLayout;
+package org.wangk.comper.ui;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.border.EmptyBorder;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.JLabel;
 import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.BoxLayout;
 
 
 public class Modify extends JDialog {
-	private JTable table;
+	private static final long serialVersionUID = 4331485046726237809L;
+//	private JTable table;
 
 	/**
 	 * Launch the application.
@@ -88,7 +83,7 @@ public class Modify extends JDialog {
 		table.setRowHeight(30);
 		JScrollPane scrollPane = new JScrollPane(table);  
 		scrollPane.setBounds(0, 0, 773, 423);
-		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		table.setFillsViewportHeight(true);  
 		getContentPane().add(scrollPane);
 		

@@ -18,6 +18,15 @@ import freemarker.template.TemplateException;
 
 public class TestHTMLGen {
 
+public static class TestClass {
+	String var;
+	public String getVar() {
+		return var;
+	}
+	public void setVar(String var) {
+		this.var = var;
+	}
+}
 	@Before
 	public void setUp() throws Exception {
 	}

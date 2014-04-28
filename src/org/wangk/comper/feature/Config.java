@@ -11,12 +11,10 @@
 package org.wangk.comper.feature;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.wangk.comper.feature.model.QuestionType;
-import org.wangk.comper.model.WKChapter;
 import org.wangk.comper.util.Assert;
 import org.wangk.comper.util.Pair;
 
@@ -69,8 +67,10 @@ public class Config implements Serializable {
 	private float						difficulty; // 期望的总体难度
 	private Set<Integer> 				chapterIdSet;//期望覆盖的章节（知识点）
 
+	//每种题型的总的分值和总题量题量，
+	//例如选择题 20分，共4道，该pair值为 pair.first == 20; pair.second == 4 
 	private Map<QuestionType, Pair<Integer, Integer>>	
-									typeScoreAndNum;//每种题型的分值和题量
+									typeScoreAndNum;
 	
 	/**
 	 *  结束条件

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beas>
-	<bean id="datasource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+
+		<bean id="datasource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
 		<property name="driverClass" value="com.mysql.jdbc.Driver"/>
 		<property name="jdbcUrl" value="jdbc:mysql://localhost:3456/wk_comper"/>
 		<property name="user" value="bitranger"/>
@@ -28,7 +29,5 @@
 	<bean id="questionService" class="org.wangk.comper.dao.QuestionService">
 		<property name="daoQuestion" ref="daoQuestion"/>
 	</bean>
-	
-	
 	
 </beas>
