@@ -26,7 +26,7 @@ public class QuestionService {
 	public EnumMap<QuestionType, ConcurrentHashMap<Integer, WKQuestionMeta>> typeMap;
 	
 	public QuestionService() {
-		typeMap = new EnumMap<>(QuestionType.class);
+		typeMap = new EnumMap<QuestionType, ConcurrentHashMap<Integer, WKQuestionMeta>>(QuestionType.class);
 		
 		typeMap.put(QuestionType.MULTI_CHOICE,  new ConcurrentHashMap<Integer, WKQuestionMeta>(256));
 		typeMap.put(QuestionType.FILL_BLANKS,  new ConcurrentHashMap<Integer, WKQuestionMeta>(256));
@@ -49,15 +49,17 @@ public class QuestionService {
 	}
 	
 	/**
-	 * 
+	 * 选出类型一致，分值相同的题
 	 * @param questionMeta
 	 * @return a set of questions of the same type and score
 	 */
 	public Set<WKQuestionMeta> getCandidates(WKQuestionMeta questionMeta) {
+		Assert.notNull(questionMeta);
 		ConcurrentHashMap<Integer, WKQuestionMeta> oneType = typeMap.get(questionMeta.type);
-		Set<WKQuestionMeta> cadi = new HashSet<>();
+		Set<WKQuestionMeta> cadi = new HashSet<WKQuestionMeta>(64);
 		for (WKQuestionMeta qMeta : oneType.values()) {
-			if (qMeta.score == questionMeta.score) {
+			if (qMeta.score == questionMeta.score
+					&& !qMeta.equals(questionMeta)) {
 				cadi.add(qMeta);
 			}
 		}

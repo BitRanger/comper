@@ -11,19 +11,28 @@ import javax.swing.JComboBox;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+
+import org.wangk.comper.context.AppContext;
+import org.wangk.comper.context.XMLBeanAssembler;
+import org.wangk.comper.context.config.InputStreamCallback;
+import org.wangk.comper.context.config.InputStreamProvider;
+import org.wangk.comper.context.config.InputStreamSupport;
+
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
+import java.io.InputStream;
 
 public class Ui {
 
 	JFrame frame;
-
+	
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		AppContext.setUp();
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {

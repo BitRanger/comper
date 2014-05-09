@@ -11,6 +11,7 @@
 package org.wangk.comper.feature;
 
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -49,8 +50,7 @@ public class TrainingField {
 		Assert.notNull(randomGenerator);
 		Assert.notNull(config);
 		
-		currentGroupList = null;
-		trainer.getInitGroupList(config.internal.numGroup);
+		currentGroupList = trainer.getInitGroupList(config.internal.numGroup);
 		trainingCount = 0;
 		resultGroupList = null;
 	}
@@ -59,7 +59,7 @@ public class TrainingField {
 	 * 遗传算法核心步骤
 	 * 
 	 */
-	public void train() {		
+	public void train() {	
 		
 		do {
 			//交叉
@@ -68,9 +68,8 @@ public class TrainingField {
 				Pair<Group, Group> pair = randomGenerator.pickFrom(currentGroupList);
 				trainer.crossOver(pair);
 			}
-			
-			if (evaluator.isQualified(currentGroupList)) {
-				resultGroupList = currentGroupList;
+			resultGroupList = currentGroupList;
+			if (evaluator.isQualified(resultGroupList)) {
 				break;
 			}
 			//选一部分出来
@@ -85,6 +84,8 @@ public class TrainingField {
 			
 		} while (!evaluator.isQualified(resultGroupList)
 				&& trainingCount <= config.internal.maxTraining);
+		
+		Collections.sort(resultGroupList);
 	}
 	
 	

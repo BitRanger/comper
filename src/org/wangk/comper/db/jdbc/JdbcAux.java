@@ -217,7 +217,7 @@ public class JdbcAux implements JdbcOperations {
 			ResultSet rs = null;
 			
 			if (cols != null) {
-				map = new NoCaseMap<>(cols.length);
+				map = new NoCaseMap<Object>(cols.length);
 				rs = ps.getGeneratedKeys();
 				if (rs.next()) {
 
@@ -420,7 +420,7 @@ assert(rs.isLast());
 			Connection connection = getConnection();
 			PreparedStatement ps = psc.createStatement(connection);
 			ResultSet rs = ps.executeQuery();
-			List<T> ls = new ArrayList<>(8);
+			List<T> ls = new ArrayList<T>(8);
 			while (rs.next()) {
 				ls.add(mapper.rowToObjec(rs));
 			}
@@ -458,7 +458,7 @@ assert(rs.isLast());
 	@Override
 	public <T> List<T> queryForList(StatementCreator psc, Class<T> type) {
 		
-		return queryForList(psc, new SingleColumMapper<>(type));
+		return queryForList(psc, new SingleColumMapper<T>(type));
 	}
 
 

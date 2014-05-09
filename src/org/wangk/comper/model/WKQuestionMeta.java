@@ -14,6 +14,11 @@ import java.io.Serializable;
 
 import org.wangk.comper.feature.model.QuestionType;
 
+
+/**
+ * 
+ * 试题的元信息
+ */
 public class WKQuestionMeta implements Serializable, Comparable<WKQuestionMeta> {
 	
 	private static final long serialVersionUID = 8796584201528492642L;

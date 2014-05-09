@@ -35,8 +35,8 @@ public final class SimpleCache<K,V> implements Serializable {
     
     public SimpleCache(int size) {
         this.size = size;
-        this.eden = new ConcurrentHashMap<>(size * 4 / 3);
-        this.longterm = new WeakHashMap<>(size * 4 / 3);
+        this.eden = new ConcurrentHashMap<K, V>(size * 4 / 3);
+        this.longterm = new WeakHashMap<K, V>(size * 4 / 3);
         lock = new ReentrantLock(true);
     }
 

@@ -183,6 +183,19 @@ public class WKPaper implements Serializable {
 			return false;
 		return true;
 	}
+
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "WKPaper [id=" + id + ", name=" + name + ", description="
+				+ description + ", score=" + score + ", name_publisher="
+				+ name_publisher + ", time_published=" + time_published
+				+ ", difficulty=" + difficulty + ", chapterList=" + chapterList
+				+ "]";
+	}
 	
 
 }

@@ -34,6 +34,8 @@ public class Trainer implements ITrainer {
 
 	@Override
 	public List<Group> getInitGroupList(int size) {
+		Assert.notNull(config);
+		
 		return null;
 	}
 	

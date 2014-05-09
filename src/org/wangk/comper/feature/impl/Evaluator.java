@@ -42,7 +42,6 @@ public class Evaluator implements IEvaluator{
 			final float difficulty = getDifficulty(group);
 			
 			final float adap = coverage * config.internal.weightCoverage
-					
 								+ (config.getDifficulty() - difficulty)
 									* config.internal.weightDifficulty;
 			

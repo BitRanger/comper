@@ -26,7 +26,10 @@ public class ColumnMapper implements RowMapping<Map<String, Object>>{
 		ResultSetMetaData md = rs.getMetaData();
 		int columnCount = md.getColumnCount();
 
-		NoCaseMap<Object> m = new NoCaseMap<>(columnCount);
+
+//		NoCaseMap m = new NoCaseMap(columnCount);
+//		NoCaseMap<Object> m = new NoCaseMap<>(columnCount);
+		NoCaseMap<Object> m = new NoCaseMap<Object>(columnCount);
 		
 		for (int i = 1; i <= columnCount; ++i) {
 			String key = JdbcUtil.lookupColumnName(md, i);

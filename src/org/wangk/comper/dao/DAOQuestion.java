@@ -14,15 +14,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-
 import javax.inject.Inject;
-
 import org.wangk.comper.db.jdbc.JdbcAux;
+import org.wangk.comper.db.jdbc.JdbcUtil;
 import org.wangk.comper.db.jdbc.stmt.StatementCreator;
 import org.wangk.comper.db.orm.RowMapping;
 import org.wangk.comper.feature.model.QuestionType;
+import org.wangk.comper.model.WKQuestionContent;
 import org.wangk.comper.model.WKQuestionMeta;
 
 
@@ -36,8 +35,7 @@ public class DAOQuestion {
 	@Inject JdbcAux jdbcAux;
 	
 	public List<WKQuestionMeta> getAll() {
-		List<WKQuestionMeta> list = new ArrayList<>(48);
-		jdbcAux.queryForList(new StatementCreator() {
+		List<WKQuestionMeta> list = jdbcAux.queryForList(new StatementCreator() {
 			@Override
 			public PreparedStatement createStatement(Connection con)
 					throws SQLException {
@@ -53,6 +51,41 @@ public class DAOQuestion {
 		jdbcAux.execute(getInsertStmt(meta));
 	}
 	
+	public void saveWithContent(final WKQuestionMeta meta, 
+								final WKQuestionContent qContent) {
+		try {
+			Connection connection = jdbcAux.getConnection();
+			PreparedStatement st = getInsertStmt(meta).createStatement(connection);
+			st.execute();
+			int id = 0;
+			ResultSet rs = st.getGeneratedKeys();
+			while (rs.next()) {
+				id = rs.getInt(1);
+			}
+			JdbcUtil.closeResultSet(rs);
+			JdbcUtil.closeStatement(st);
+			JdbcUtil.closeConnection(connection);
+			saveQuestionContent(id, qContent);
+		} catch (SQLException e) {
+			throw new RuntimeException(e.getSQLState() + "\nCaused by\n"
+					+ e.getCause(), e);
+		}
+	}
+	public void saveQuestionContent(final int id, final WKQuestionContent qContent) {
+		jdbcAux.execute(new StatementCreator() {
+			@Override
+			public PreparedStatement createStatement(Connection con)
+					throws SQLException {
+				PreparedStatement st = con.prepareStatement(
+						"insert into wk_question(id_meta, content, answer, comment)values(?,?,?,?)");
+						st.setInt(1, id);
+						st.setString(2, qContent.content);
+						st.setString(3, qContent.answer);
+						st.setString(4, qContent.comment);
+				return st;
+			}
+		});
+	}
 	public void update(final WKQuestionMeta meta) {
 		jdbcAux.execute(getUpdateStmt(meta));
 	}
@@ -90,6 +123,9 @@ public class DAOQuestion {
 		};
 	}
 	
+
+	public static final String[] RET_ID = {"id"};
+	
 	public static StatementCreator getInsertStmt(final WKQuestionMeta meta ) {
 		
 		return new StatementCreator() {
@@ -99,7 +135,7 @@ public class DAOQuestion {
 				PreparedStatement ps = con.prepareStatement(
 						"INSERT INTO wk_question_meta"
 						+ "(id_paper, id_chapter, type, difficulty, score)"
-						+ "VALUES(?,?,?,?,?)");
+						+ "VALUES(?,?,?,?,?)", RET_ID);
 				ps.setInt(1, meta.id_paper);
 				ps.setInt(2, meta.id_chapter);
 				ps.setInt(3, meta.type.intValue());

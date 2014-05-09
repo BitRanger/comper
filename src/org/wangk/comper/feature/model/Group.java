@@ -48,6 +48,9 @@ public class Group implements Serializable, Comparable<Group> {
 		public float adaptability = -1.0F;
 	}
 	
+	/**
+	 * 根据 适应度 排序， 从大到小
+	 */
 	@Override
 	public int compareTo(Group o) {
 		if (this.summary.adaptability > o.summary.adaptability) {

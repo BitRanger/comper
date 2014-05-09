@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -17,6 +16,7 @@ import org.wangk.comper.model.WKChapter;
 public class DAOChapter {
 
 	@Inject JdbcAux jdbcAux;
+	
 	private static final String SELECT = 
 	"SELECT id, name, description, time_created FROM wk_chapter ";
 	

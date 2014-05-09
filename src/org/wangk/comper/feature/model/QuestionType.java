@@ -17,11 +17,33 @@ package org.wangk.comper.feature.model;
  */
 public enum QuestionType {
 	
+	/**
+	 * 单选
+	 */
 	MULTI_CHOICE(2),
+	/**
+	 * 填空题
+	 */
 	FILL_BLANKS(4),
+	
+	/**
+	 * 判断题
+	 */
 	TRUE_FALSE(8),
+	
+	/**
+	 * 简答题
+	 */
 	SIMPLE_QA(16),
+	
+	/**
+	 * 解释题
+	 */
 	EXPLAINATION(32),
+	
+	/**
+	 * 应用题
+	 */
 	APPLICATION(64);
 	
 	private final int value;
