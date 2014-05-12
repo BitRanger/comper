@@ -22,7 +22,7 @@ import org.wangk.comper.util.Pair;
  * @author BowenCai
  *
  */
-public interface IRandomGenerator extends IRefreshable{
+public interface IRandomGenerator {
 
 
 	public int 				pickInt(int limit);
@@ -35,6 +35,7 @@ public interface IRandomGenerator extends IRefreshable{
 
 	/**
 	 * 随机选一组元素，返回元素的下标
+	 * 返回值为下标集合，与容器所装内容无关
 	 * 
 	 * @param groupList
 	 * @param ratio
@@ -42,8 +43,4 @@ public interface IRandomGenerator extends IRefreshable{
 	 */
 	public<T> List<Integer> pickIdexes(List<T> groupList, float ratio);
 	
-	public Config getConfig();
-
-	public void setConfig(Config config);
-
 }

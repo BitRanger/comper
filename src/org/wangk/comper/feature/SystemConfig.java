@@ -24,10 +24,12 @@ public class SystemConfig implements Serializable {
 	private static final long serialVersionUID = 8511259440940328750L;
 	
 	public static SystemConfig getDefault() {
-		return null;
+		SystemConfig config = new SystemConfig();
+		return config;
 	}
-	public float weightCoverage = 0.6F;
-	public float weightDifficulty = 0.6F;
+	
+	public float weightCoverage = 0.5F;
+	public float weightDifficulty = 0.5F;
 	/**
 	 * 结果集大小
 	 */
@@ -36,12 +38,12 @@ public class SystemConfig implements Serializable {
 	/**
 	 * 训练次数
 	 */
-	public int numTraining = 256;
+	public int numTraining = 128;
 	
 	/**
 	 * 最多训练次数
 	 */
-	public int maxTraining = 1024;
+	public int maxTraining = 512;
 	
 	/**
 	 * 中间结果大小 
@@ -51,20 +53,20 @@ public class SystemConfig implements Serializable {
 	/**
 	 * 中间结果最大值
 	 */
-	public int maxGroup = 128;
+	public int maxGroup = 32;
 	
 	/**
 	 * 两两交叉的次数
 	 */
-	public int numCrossOver = 16;
+	public int numCrossOver = 12;
 	
 	/**
-	 * 变异的组的比率
+	 * 变异的组占总组数的比率
 	 */
-	public float ratioVariantGroup = 0.0F;
+	public float ratioVariantGroup = 0.65F;
 	
 	/**
-	 * 一组内变异的比率
+	 * 一组内变异的题比率
 	 */
-	public float ratioVariant;
+	public float ratioVariant = 0.4F;
 }

@@ -50,6 +50,10 @@ public class TrainingField {
 		Assert.notNull(randomGenerator);
 		Assert.notNull(config);
 		
+		trainer.setConfig(config);
+		evaluator.setConfig(config);
+		trainer.setRandomGenerator(getRandomGenerator());
+		
 		currentGroupList = trainer.getInitGroupList(config.internal.numGroup);
 		trainingCount = 0;
 		resultGroupList = null;
@@ -67,6 +71,7 @@ public class TrainingField {
 			while (crossCount <= config.internal.numCrossOver) {
 				Pair<Group, Group> pair = randomGenerator.pickFrom(currentGroupList);
 				trainer.crossOver(pair);
+				crossCount++;
 			}
 			resultGroupList = currentGroupList;
 			if (evaluator.isQualified(resultGroupList)) {
@@ -79,9 +84,9 @@ public class TrainingField {
 
 			//进行交叉，也就是从备选库里选同分值，同类型的题进行替换
 			trainer.bulkVariate(toVariant, config.internal.ratioVariant);
-			
 			resultGroupList = currentGroupList;
-			
+			System.gc();
+			System.gc();
 		} while (!evaluator.isQualified(resultGroupList)
 				&& trainingCount <= config.internal.maxTraining);
 		
@@ -93,7 +98,6 @@ public class TrainingField {
 		this.config = config;
 		this.trainer.refresh(config);
 		this.evaluator.refresh(config);
-		this.randomGenerator.refresh(config);
 		List<Group> oldGroups = currentGroupList;
 		prepare();
 		if (oldGroups != null) {

@@ -19,10 +19,20 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 public class JdbcUtil {
 
-
+	public static final SimpleDateFormat SQLITE_DATE_FMT = 
+			new SimpleDateFormat("YYYY-MM-DD HH:MM:SS");
+	public static Timestamp parseSQLiteTimestamp(String dd) {
+		try {
+			return new Timestamp(SQLITE_DATE_FMT.parse(dd).getTime());
+		} catch (Exception e) {
+			return new Timestamp(System.currentTimeMillis());
+		}
+	}
 	public static void closeConnection(Connection con) {
 		
 		if (con != null) {

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -24,7 +25,6 @@ import org.wangk.comper.util.Pair;
 
 public class RandomGenerator implements IRandomGenerator {
 
-	private Config config;
 
 
 	@Override
@@ -34,6 +34,7 @@ public class RandomGenerator implements IRandomGenerator {
 	
 	@Override
 	public<T> T pickSingle(List<T> list) {
+		
 		ThreadLocalRandom random = ThreadLocalRandom.current();
 		return list.get(random.nextInt(list.size()));
 	}
@@ -96,21 +97,4 @@ public class RandomGenerator implements IRandomGenerator {
 		return newSet;
 	}
 	
-	
-	
-	@Override
-	public void refresh(Config config) {
-		this.config = config;
-	}
-	
-	@Override
-	public Config getConfig() {
-		return config;
-	}
-
-	@Override
-	public void setConfig(Config config) {
-		this.config = config;
-	}
-
 }

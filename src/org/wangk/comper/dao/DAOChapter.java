@@ -9,6 +9,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.wangk.comper.db.jdbc.JdbcAux;
+import org.wangk.comper.db.jdbc.JdbcUtil;
 import org.wangk.comper.db.jdbc.stmt.StatementCreator;
 import org.wangk.comper.db.orm.RowMapping;
 import org.wangk.comper.model.WKChapter;
@@ -59,7 +60,8 @@ public class DAOChapter {
 			chapter.id = rs.getInt("id");
 			chapter.name = rs.getString("name");
 			chapter.description = rs.getString("description");
-			chapter.time_created = rs.getTimestamp("time_created");
+//			chapter.time_created = rs.getTimestamp("time_created");
+			chapter.time_created = JdbcUtil.parseSQLiteTimestamp(rs.getString("time_created"));
 			return chapter;
 		}
 	};

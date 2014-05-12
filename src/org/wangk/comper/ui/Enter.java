@@ -37,13 +37,16 @@ public class Enter extends JDialog {
 	private JTextArea textArea_comment ;
 	private JComboBox comboBox_type ;
 	private JComboBox comboBox_points ;
+	private JComboBox<Integer> comboBox_paper;
 	String problem,answer,comment;
 	private String paperId;
 	private QuestionType qtye;
 	float hard;
 	int score;
-	private Set<Integer> set_point = new HashSet<>(48);
-	
+	int paper;
+	//int point;
+	//private Set<Integer> set_point = new HashSet<>(48);
+	private int point;
 	
 
 	public Enter(String s) {
@@ -117,9 +120,21 @@ public class Enter extends JDialog {
 		label_4.setBounds(21, 389, 54, 15);
 		contentPanel.add(label_4);
 
-		comboBox_points = new JComboBox();
+		String point_s[]={"1","2","3","4","5"};
+		comboBox_points = new JComboBox(point_s);
 		comboBox_points.setBounds(463, 295, 141, 21);
 		contentPanel.add(comboBox_points);
+		comboBox_points.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				String string = comboBox_points.getSelectedObjects()[0]+"";
+				string = string.trim();
+				textField_points.setText(string);
+				
+			}
+		});
 		
 		JLabel label_5 = new JLabel("备注");
 		label_5.setBounds(656, 22, 54, 15);
@@ -129,7 +144,7 @@ public class Enter extends JDialog {
 		label_6.setBounds(367, 355, 54, 15);
 		contentPanel.add(label_6);
 		
-		textField_points = new JTextField();
+		textField_points = new JTextField("1");
 		textField_points.setBounds(463, 352, 141, 21);
 		contentPanel.add(textField_points);
 		textField_points.setColumns(10);
@@ -137,11 +152,20 @@ public class Enter extends JDialog {
 		JLabel label_7 = new JLabel("所属试卷");
 		label_7.setBounds(656, 298, 54, 15);
 		contentPanel.add(label_7);
-		
+		/*
 		textField_paper = new JTextField("0");
 		textField_paper.setBounds(656, 352, 213, 21);
 		contentPanel.add(textField_paper);
 		textField_paper.setColumns(10);
+		*/
+		comboBox_paper = new JComboBox<Integer>();
+		for(int i =0;i<10;i++)
+			comboBox_paper.addItem(i);
+		
+		comboBox_paper.setBounds(656, 352, 213, 21);
+		contentPanel.add(comboBox_paper);
+		comboBox_paper.setSelectedIndex(0);
+		
 		
 		{
 			JPanel buttonPane = new JPanel();
@@ -153,6 +177,7 @@ public class Enter extends JDialog {
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
 				okButton.addActionListener(new ActionListener() {
+					
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
 						// TODO Auto-generated method stub
@@ -180,8 +205,10 @@ public class Enter extends JDialog {
 		answer = textArea_answer.getText();
 		comment = textArea_comment.getText();
 		
+		point = Integer.parseInt(textField_points.getText().trim());
 		hard = Float.parseFloat(textField_hard.getText().trim());
-		score = Integer.parseInt(textField_score.getText().trim());		
+		score = Integer.parseInt(textField_score.getText().trim());
+		paper =Integer.parseInt((comboBox_paper.getSelectedObjects()[0]+"").trim());
 		String tyString="";
 		String types[] = {"选择题","填空题","判断题","简解题","解析题","应用题"};
 		tyString = comboBox_type.getSelectedObjects()[0]+"";
@@ -190,12 +217,12 @@ public class Enter extends JDialog {
 			if(tyString.equals(types[i]))
 				qtye = QuestionType.lookup((int)Math.pow(2, i+1));
 		}
-		paperId = textField_paper.getText();
+		//paperId = textField_paper.getText();
 		
 		
 		WKQuestionMeta meta = new WKQuestionMeta();
-		meta.id_chapter = 5;
-		meta.id_paper = 5;//Integer.parseInt(paperId.trim());
+		meta.id_chapter = point;
+		meta.id_paper = paper;//Integer.parseInt(paperId.trim());
 		meta.score = score;
 		meta.difficulty = hard;
 		meta.type = qtye;
@@ -227,7 +254,7 @@ public class Enter extends JDialog {
 		System.out.println("hard "+ hard);
 		System.out.println("score" + score);
 		System.out.println("QuestionType" + qtye);
-		System.out.println("PaperId " + paperId);
+		System.out.println("PaperId " + paper);
 	}
 
 	public String getProblem() {
@@ -250,11 +277,16 @@ public class Enter extends JDialog {
 		return score;
 	}
 
-	public Set<Integer> getSet_point() {
-		return set_point;
+	
+	
+	
+	public int getPoint() {
+		return point;
 	}
-	
-	
+
+
+
+
 	class focus implements FocusListener
 	{
 

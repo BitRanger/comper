@@ -21,7 +21,7 @@ public class QuestionService {
 
 	@Inject DAOQuestion daoQuestion;
 	
-	ConcurrentHashMap<Integer, WKQuestionMeta> AllQuestion;
+//	ConcurrentHashMap<Integer, WKQuestionMeta> AllQuestion;
 	
 	public EnumMap<QuestionType, ConcurrentHashMap<Integer, WKQuestionMeta>> typeMap;
 	
@@ -39,13 +39,23 @@ public class QuestionService {
 	/**
 	 * 从数据库里读出所有题，分类存到槽里
 	 */
+	private boolean loaded = false;
+	public void loadAll(boolean force) {
+		if(force) {
+			List<WKQuestionMeta> all = daoQuestion.getAll();
+			for (WKQuestionMeta meta : all) {
+				typeMap.get(meta.type).put(meta.id, meta);
+			}
+		}
+	}
+	
 	public void loadAll() {
 		Assert.notNull(daoQuestion);
-		
-		List<WKQuestionMeta> all = daoQuestion.getAll();
-		for (WKQuestionMeta meta : all) {
-			typeMap.get(meta.type).put(meta.id, meta);
+		if (loaded) {
+			return;
 		}
+		loadAll(true);
+		loaded = true;
 	}
 	
 	/**

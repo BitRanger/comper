@@ -27,6 +27,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JSlider;
@@ -74,7 +75,7 @@ public class Choose extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public Choose(String s) {
+	public Choose(JFrame fr,String s) {
 		//SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 //		daoQuestion = AppContext.beanAssembler.getBean("daoQuestion");
 		
@@ -299,6 +300,8 @@ public class Choose extends JDialog {
 					public void actionPerformed(ActionEvent arg0) {
 						// TODO Auto-generated method stub
 						double hard = (double) spinner_hard.getValue();
+						System.out.println("hard"+ hard);
+						
 						try {
 							int choose_score_int =Integer.parseInt(choose_score.getText());
 							int choose_number_int =(int) choose_number.getValue();
@@ -319,12 +322,12 @@ public class Choose extends JDialog {
 							Pair<Integer, Integer> app_problem = new Pair<Integer, Integer>(app_score_last, explain_number_int);
 							
 							Map<QuestionType, Pair<Integer, Integer>> typeMap = new HashMap<QuestionType, Pair<Integer,Integer>>();							
-							typeMap.put(QuestionType.lookup(2), choose_problem);
-							typeMap.put(QuestionType.lookup(4), fill_problem);
-							typeMap.put(QuestionType.lookup(8), trf_problem);
-							typeMap.put(QuestionType.lookup(16), answer_problem);
-							typeMap.put(QuestionType.lookup(32), explain_problem);
-							typeMap.put(QuestionType.lookup(64), app_problem);
+							typeMap.put(QuestionType.MULTI_CHOICE, choose_problem);
+							typeMap.put(QuestionType.FILL_BLANKS, fill_problem);
+							typeMap.put(QuestionType.TRUE_FALSE, trf_problem);
+							typeMap.put(QuestionType.SIMPLE_QA, answer_problem);
+							typeMap.put(QuestionType.EXPLAINATION, explain_problem);
+							typeMap.put(QuestionType.APPLICATION, app_problem);
 														
 							float tole = 0.02f;
 							
@@ -335,7 +338,7 @@ public class Choose extends JDialog {
 							else {
 								JOptionPane.showMessageDialog(null, "OK", "OK", JOptionPane.INFORMATION_MESSAGE);
 								
-								config =  Config.build((float)hard, range_Set, typeMap, 1, tole, SystemConfig.getDefault());
+								config =  Config.build((float)hard, range_Set, typeMap, 4, tole, SystemConfig.getDefault());
 								Choose.this.dispose();
 							}
 							
@@ -363,6 +366,14 @@ public class Choose extends JDialog {
 				buttonPane.add(cancelButton);
 			}
 		}
+	}
+	
+	
+	
+	
+	
+	public Config getConfig() {
+		return config;
 	}
 	
 	class focus implements FocusListener

@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.wangk.comper.feature.impl;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -20,6 +22,7 @@ import org.wangk.comper.feature.Config;
 import org.wangk.comper.feature.IRandomGenerator;
 import org.wangk.comper.feature.ITrainer;
 import org.wangk.comper.feature.model.Group;
+import org.wangk.comper.feature.model.QuestionType;
 import org.wangk.comper.misc.Predicate;
 import org.wangk.comper.model.WKQuestionMeta;
 import org.wangk.comper.util.Assert;
@@ -30,14 +33,37 @@ public class Trainer implements ITrainer {
 	private Config config;
 
 	@Inject private IRandomGenerator 	randomGenerator;
-	@Inject private QuestionService	questionSerive;
+	@Inject private QuestionService		questionSerive;
 
 	@Override
 	public List<Group> getInitGroupList(int size) {
 		Assert.notNull(config);
-		
-		return null;
+		questionSerive.loadAll();
+		Set<Group> groups = new HashSet<>(size);
+		while (groups.size() < size) {
+			Group group = new Group();
+			//注意，使用config的type列表，因为有些题型没被选入
+			for (QuestionType tp : config.getTypeScoreAndNum().keySet()) {
+				group.typeMap.put(tp, getFor(tp));
+			}
+			variate(group, 0.3F);
+			groups.add(group);
+		}
+		return new ArrayList<>(groups);
 	}
+	
+	private ArrayList<WKQuestionMeta> getFor(QuestionType qType) {
+		Knap knap = new Knap();
+		ArrayList<WKQuestionMeta> multiC = new ArrayList<WKQuestionMeta>(
+				questionSerive.typeMap.get(qType).values());
+		
+		knap.sourceQ = multiC;
+		knap.qNumber = config.getTypeScoreAndNum()
+				.get(qType).second;
+		knap.totalScore = config.getTypeScoreAndNum().get(qType).first;
+		return knap.getResult();
+	}
+	
 	
 	@Override
 	public List<Group> recruit(int size) {
@@ -69,12 +95,13 @@ public class Trainer implements ITrainer {
 	@Override
 	public void crossOver(Group group1, Group group2) {
 		
-		Assert.isTrue(group1.slots.size() == group2.slots.size(), 
+		Assert.isTrue(group1.typeMap.size() == group2.typeMap.size(), 
 				"two group size mismatch");
 		
-		for (int i = 0; i < group1.slots.size(); i++) {
-			List<WKQuestionMeta> g1OneType = group1.slots.get(i);
-			List<WKQuestionMeta> g2OneType = group2.slots.get(i);
+		for (QuestionType ty : config.getTypeScoreAndNum().keySet()) {
+			
+			List<WKQuestionMeta> g1OneType = group1.typeMap.get(ty);
+			List<WKQuestionMeta> g2OneType = group2.typeMap.get(ty);
 			Assert.isTrue(g1OneType.size() == g2OneType.size());
 			final int cutPoint = randomGenerator.pickInt(g2OneType.size());
 			for (int j = cutPoint; j < g1OneType.size(); j++) {
@@ -89,7 +116,7 @@ public class Trainer implements ITrainer {
 	@Override
 	public void variate(Group group, final float ratio){
 		
-		for (List<WKQuestionMeta> oneType : group.slots) {
+		for (List<WKQuestionMeta> oneType : group.typeMap.values()) {
 
 			List<Integer> idxLs = randomGenerator.pickIdexes(oneType, ratio);
 			for (Integer i : idxLs) {
@@ -107,11 +134,9 @@ public class Trainer implements ITrainer {
 		}
 	}
 	
-	
 	@Override
 	public void refresh(Config config) {
 		this.config = config;
-		randomGenerator.refresh(config);
 	}
 	
 	@Override
@@ -123,7 +148,6 @@ public class Trainer implements ITrainer {
 	public void setConfig(Config c){
 		this.config = c;
 	}
-
 
 	@Override
 	public IRandomGenerator getRandomGenerator() {

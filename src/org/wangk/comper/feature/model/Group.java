@@ -11,28 +11,44 @@
 package org.wangk.comper.feature.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.wangk.comper.model.WKQuestionMeta;
 
 
+/**
+ * 代表一套试卷
+ * @author BowenCai
+ *
+ */
 public class Group implements Serializable, Comparable<Group> {
 
 	private static final long serialVersionUID = -2604770597064509121L;
-//	Map<QuestionType, List<WKQuestionMeta>> qs;
 
-	public List<List<WKQuestionMeta> > slots;
-	public Summary summary = new Summary();
-	
-	/**
-	 * 每种题型
-	 */
-	public List<WKQuestionMeta> multiChoiceLs;
-	public List<WKQuestionMeta> fillblanksLs;
-	public List<WKQuestionMeta> trueFalseLs;
-	public List<WKQuestionMeta> simpleQALs;
-	public List<WKQuestionMeta> explainationLs;
-	public List<WKQuestionMeta> applicationLs;
+	public EnumMap<QuestionType, ArrayList<WKQuestionMeta>> typeMap;
+	public Group() {
+		typeMap = new EnumMap<QuestionType, ArrayList<WKQuestionMeta>>(QuestionType.class);
+		
+		typeMap.put(QuestionType.MULTI_CHOICE,  new ArrayList<WKQuestionMeta>(256));
+		typeMap.put(QuestionType.FILL_BLANKS,  new ArrayList<WKQuestionMeta>(256));
+		typeMap.put(QuestionType.TRUE_FALSE,  new ArrayList<WKQuestionMeta>(256));
+		typeMap.put(QuestionType.SIMPLE_QA,  new ArrayList<WKQuestionMeta>(256));
+		typeMap.put(QuestionType.EXPLAINATION,  new ArrayList<WKQuestionMeta>(256));
+		typeMap.put(QuestionType.APPLICATION,  new ArrayList<WKQuestionMeta>(256));
+		
+	}
+//	/**
+//	 * 每种题型
+//	 */
+//	public List<WKQuestionMeta> multiChoiceLs;
+//	public List<WKQuestionMeta> fillblanksLs;
+//	public List<WKQuestionMeta> trueFalseLs;
+//	public List<WKQuestionMeta> simpleQALs;
+//	public List<WKQuestionMeta> explainationLs;
+//	public List<WKQuestionMeta> applicationLs;
 	
 	/**
 	 * 记录卷子信息
@@ -47,16 +63,17 @@ public class Group implements Serializable, Comparable<Group> {
 		
 		public float adaptability = -1.0F;
 	}
+	public Summary summary = new Summary();
 	
 	/**
 	 * 根据 适应度 排序， 从大到小
 	 */
 	@Override
 	public int compareTo(Group o) {
-		if (this.summary.adaptability > o.summary.adaptability) {
-			return 1;
-		} else if (this.summary.adaptability < o.summary.adaptability) {
+		if (this.summary.adaptability < o.summary.adaptability) {
 			return -1;
+		} else if (this.summary.adaptability > o.summary.adaptability) {
+			return 1;
 		}
 		int thisBits = Float.floatToIntBits(this.summary.adaptability);
 		int anotherBits = Float.floatToIntBits(o.summary.adaptability);
@@ -65,15 +82,24 @@ public class Group implements Serializable, Comparable<Group> {
              1));
 	}
 
+
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((slots == null) ? 0 : slots.hashCode());
+		result = prime * result + ((typeMap == null) ? 0 : typeMap.hashCode());
 		return result;
 	}
 
+
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -86,14 +112,41 @@ public class Group implements Serializable, Comparable<Group> {
 			return false;
 		}
 		Group other = (Group) obj;
-		if (slots == null) {
-			if (other.slots != null) {
+		if (typeMap == null) {
+			if (other.typeMap != null) {
 				return false;
 			}
-		} else if (!slots.equals(other.slots)) {
+		} else if (!typeMap.equals(other.typeMap)) {
 			return false;
 		}
 		return true;
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder(1024);
+		for (QuestionType tp : this.typeMap.keySet()) {
+			ArrayList<WKQuestionMeta> ls = typeMap.get(tp);
+			if (ls.size() > 0) {
+				builder.append(tp.toString()).append('\n');
+				for (WKQuestionMeta wkQuestionMeta : ls) {
+					builder.append('\t').append(wkQuestionMeta.toString()).append('\n');
+				}
+				builder.append('\n');
+			}
+		}
+		return builder.toString();
+//		return "multiChoice=" + typeMap.get(QuestionType.MULTI_CHOICE) 
+//				+ ", fillblanksLs="
+//				+ typeMap.get(QuestionType.MULTI_CHOICE) + ", trueFalseLs=" + typeMap.get(QuestionType.TRUE_FALSE)
+//				+ ", simpleQALs=" + typeMap.get(QuestionType.SIMPLE_QA) + ", explainationLs="
+//				+ typeMap.get(QuestionType.EXPLAINATION) + ", applicationLs=" + typeMap.get(QuestionType.APPLICATION)
+//				+ ", summary=" + summary + "]";
 	}
 	
 

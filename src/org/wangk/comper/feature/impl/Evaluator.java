@@ -33,9 +33,9 @@ public class Evaluator implements IEvaluator{
 	@Override
 	public void evaluate(Group group) {
 		
-		int curHash = group.hashCode();
-		int currentStamp = curHash;
-		currentStamp *= config.internal.weightCoverage * config.internal.weightDifficulty;
+		int currentStamp = (int) (group.hashCode()
+									* config.internal.weightCoverage 
+									* config.internal.weightDifficulty);
 		
 		if (group.summary.stamp != currentStamp) {
 			final float coverage = getCoverage(group);
@@ -45,12 +45,14 @@ public class Evaluator implements IEvaluator{
 								+ (config.getDifficulty() - difficulty)
 									* config.internal.weightDifficulty;
 			
-			currentStamp = curHash;
-			currentStamp *= config.internal.weightCoverage * config.internal.weightDifficulty;
 			
 			group.summary.adaptability = adap;
 			group.summary.difficulty = difficulty;
 			group.summary.coverage = coverage;
+			
+			currentStamp = (int) (group.hashCode()
+					* config.internal.weightCoverage 
+					* config.internal.weightDifficulty);
 			group.summary.stamp = currentStamp;
 		}
 	}
@@ -67,32 +69,41 @@ public class Evaluator implements IEvaluator{
 	public boolean isQualified(List<Group> groups) {
 		bulkEvaluate(groups);
 		Collections.sort(groups);
-		return 1.0F - groups.get(groups.size() - 1).summary.adaptability 
-				< config.getTolerance();
+		float adap = 1.0F - groups.get(groups.size() - 1).summary.adaptability;
+		System.out.print("Evaluator.isQualified()\t\t\t");
+		System.out.println(groups.get(groups.size() - 1).summary.adaptability);
+		
+		return adap < config.getTolerance();
 	}
-	
+	//获得覆盖率
 	float getCoverage(Group group) {
 		
 		Set<Integer> chapterCovered = new HashSet<Integer>();
-		for (List<WKQuestionMeta> ls : group.slots) {
-			for (WKQuestionMeta meta : ls) {
-				chapterCovered.add(meta.id_chapter);
+		for (List<WKQuestionMeta> ls : group.typeMap.values()) {
+			if (ls.size() > 0) {
+				for (WKQuestionMeta meta : ls) {
+					chapterCovered.add(meta.id_chapter);
+				}
 			}
 		}
+		
 		Set<Integer> cp = new HashSet<Integer>(config.getChapterIdSet());
 		cp.retainAll(chapterCovered);
 		float foo = cp.size();
+		System.out.println("Evaluator.getCoverage() " + (foo / config.getChapterIdSet().size()));
 		return foo / config.getChapterIdSet().size();
 	}
 	
-
 	float getDifficulty(Group group) {
 		float diffi = 0.0F;
-		for (List<WKQuestionMeta> ls : group.slots) {
-			for (WKQuestionMeta meta : ls) {
-				diffi += meta.score * meta.difficulty;
+		for (List<WKQuestionMeta> ls : group.typeMap.values()) {
+			if (ls.size() > 0) {
+				for (WKQuestionMeta meta : ls) {
+					diffi += meta.score * meta.difficulty;
+				}
 			}
 		}
+		System.out.println("Evaluator.getDifficulty() " + (diffi / config.getTotalScore()));
 		return diffi / config.getTotalScore();
 	}
 	

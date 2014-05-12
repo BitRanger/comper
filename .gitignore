@@ -4,7 +4,9 @@
 /ignore/
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
-
+*.db
+/test/
+*/context/AppContext.java
 # Package Files #
 *.jar
 *.war

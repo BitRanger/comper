@@ -75,4 +75,14 @@ public class WKQuestionMeta implements Serializable, Comparable<WKQuestionMeta> 
 			return false;
 		return true;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "q [id=" + id + ", id_paper=" + id_paper
+				+ ", type=" + type + ", difficulty=" + difficulty + ", score="
+				+ score + ", id_chapter=" + id_chapter + "]";
+	}
 }

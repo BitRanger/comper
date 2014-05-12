@@ -4,11 +4,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import org.wangk.comper.db.jdbc.JdbcAux;
+import org.wangk.comper.db.jdbc.JdbcUtil;
 import org.wangk.comper.db.jdbc.stmt.StatementCreator;
 import org.wangk.comper.db.orm.RowMapping;
 import org.wangk.comper.model.WKPaper;
@@ -80,7 +82,7 @@ public class DAOPaper {
 			paper.description = rs.getString("description");
 			paper.score = rs.getInt("score");
 			paper.name_publisher = rs.getString("name_publisher");
-			paper.time_published = rs.getTimestamp("time_published");
+			paper.time_published = JdbcUtil.parseSQLiteTimestamp(rs.getString("time_published"));
 			return paper;
 		}
 	};

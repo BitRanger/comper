@@ -17,6 +17,7 @@ import org.wangk.comper.context.XMLBeanAssembler;
 import org.wangk.comper.context.config.InputStreamCallback;
 import org.wangk.comper.context.config.InputStreamProvider;
 import org.wangk.comper.context.config.InputStreamSupport;
+import org.wangk.comper.feature.Config;
 
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
@@ -27,6 +28,11 @@ import java.io.InputStream;
 public class Ui {
 
 	JFrame frame;
+	private Config config;
+	private JLabel label_score;
+	private JLabel label_hard;
+	private JLabel label_range ;
+	
 	
 	/**
 	 * Launch the application.
@@ -122,7 +128,8 @@ public class Ui {
 		itemModify.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				Modify modify = new Modify("修改题库");
+				Modify modify = new Modify();
+				
 				modify.setVisible(true);
 			}
 		});
@@ -176,22 +183,22 @@ public class Ui {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				
-				Choose choose = new Choose("选择");
+				Choose choose = new Choose(new javax.swing.JFrame(),"选择");				
 				choose.setVisible(true);
-				
-				
+				config = choose.getConfig();
+				setAll();
 			}
 		});
 		button_choose.setBounds(957, 219, 87, 34);
 		frame.getContentPane().add(button_choose);
 
-		JLabel label_hard = new JLabel("难度");
-		label_hard.setFont(new Font("宋体", Font.PLAIN, 24));
+		label_hard = new JLabel("难度");
+		label_hard.setFont(new Font("宋体", Font.PLAIN, 14));
 		label_hard.setBounds(694, 311, 98, 34);
 		frame.getContentPane().add(label_hard);
 
-		JLabel label_range = new JLabel("范围");
-		label_range.setFont(new Font("宋体", Font.PLAIN, 24));
+		label_range = new JLabel("范围");
+		label_range.setFont(new Font("宋体", Font.PLAIN, 14));
 		label_range.setBounds(694, 395, 98, 34);
 		frame.getContentPane().add(label_range);
 
@@ -209,8 +216,8 @@ public class Ui {
 		label_2.setBounds(695, 39, 97, 31);
 		frame.getContentPane().add(label_2);
 
-		JLabel label_score = new JLabel("总分");
-		label_score.setFont(new Font("宋体", Font.PLAIN, 24));
+		label_score = new JLabel("总分");
+		label_score.setFont(new Font("宋体", Font.PLAIN, 14));
 		label_score.setBounds(694, 224, 98, 29);
 		frame.getContentPane().add(label_score);
 
@@ -218,10 +225,46 @@ public class Ui {
 		button.setFont(new Font("宋体", Font.PLAIN, 20));
 		button.setBounds(933, 508, 118, 47);
 		frame.getContentPane().add(button);
+		button.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				Choose choose = new Choose(new javax.swing.JFrame(),"选择");				
+				choose.setVisible(true);
+				config = choose.getConfig();
+				setAll();
+				
+			}
+		});
 
 		JButton btnxml = new JButton("导出HTML");
 		btnxml.setFont(new Font("宋体", Font.PLAIN, 20));
 		btnxml.setBounds(435, 27, 137, 39);
 		frame.getContentPane().add(btnxml);
+		btnxml.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				//if(config.getDifficulty() == null)
+				System.out.println("hard"+config.getDifficulty());
+				//setAll();
+			}
+		});		
 	}
+	public void setAll() {
+		label_hard.setText("难度   :"  + config.getDifficulty());
+		label_score.setText("总分   :" + config.getTotalScore());
+		String string = "范围   :";
+		for (Integer i : config.getChapterIdSet()) {
+			string+=i+ "， " ;
+		}
+		
+		label_range.setText(string);
+		
+		
+		
+	}
+	
 }
