@@ -85,4 +85,11 @@ public class WKQuestionMeta implements Serializable, Comparable<WKQuestionMeta> 
 				+ ", type=" + type + ", difficulty=" + difficulty + ", score="
 				+ score + ", id_chapter=" + id_chapter + "]";
 	}
+	
+	public String printStr() {
+		return 		"paper ID:" + id_paper
+				+ "  chapter ID:" + id_chapter
+				+ "  difficulty:" + difficulty 
+				+ "  score:" + score;
+	}
 }

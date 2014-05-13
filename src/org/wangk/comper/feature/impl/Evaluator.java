@@ -69,8 +69,8 @@ public class Evaluator implements IEvaluator{
 	public boolean isQualified(List<Group> groups) {
 		bulkEvaluate(groups);
 		Collections.sort(groups);
-		float adap = 1.0F - groups.get(groups.size() - 1).summary.adaptability;
-		System.out.print("Evaluator.isQualified()\t\t\t");
+		float adap = 1.0F - groups.get(groups.size() - 2).summary.adaptability;
+		System.out.print("Evaluator.isQualified()\t\t Best Adap");
 		System.out.println(groups.get(groups.size() - 1).summary.adaptability);
 		
 		return adap < config.getTolerance();
@@ -90,7 +90,6 @@ public class Evaluator implements IEvaluator{
 		Set<Integer> cp = new HashSet<Integer>(config.getChapterIdSet());
 		cp.retainAll(chapterCovered);
 		float foo = cp.size();
-		System.out.println("Evaluator.getCoverage() " + (foo / config.getChapterIdSet().size()));
 		return foo / config.getChapterIdSet().size();
 	}
 	
@@ -103,7 +102,6 @@ public class Evaluator implements IEvaluator{
 				}
 			}
 		}
-		System.out.println("Evaluator.getDifficulty() " + (diffi / config.getTotalScore()));
 		return diffi / config.getTotalScore();
 	}
 	

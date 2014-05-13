@@ -1,4 +1,4 @@
-package test.comper.dao;
+package test.gen;
 
 import java.util.List;
 import java.util.Random;
@@ -49,19 +49,19 @@ public class Gen extends DBConnection {
 	@Test
 	public void go() {
 		
-//		for (int i = 0; i < 20; i++) {
-//			WKPaper paper = new WKPaper();
-//			paper.difficulty = random.nextFloat();
-//			paper.name = "paper " + i;
-//			daoPaper.save(paper);
-//		}
-//
-//		for (int i = 0; i < 15; i++) {
-//			WKChapter paper = new WKChapter();
-//			paper.name = "WKChapter " + i;
-//			daoChapter.save(paper);
-//		}
-//		
+		for (int i = 0; i < 20; i++) {
+			WKPaper paper = new WKPaper();
+			paper.difficulty = random.nextFloat();
+			paper.name = "paper " + i;
+			daoPaper.save(paper);
+		}
+
+		for (int i = 0; i < 15; i++) {
+			WKChapter paper = new WKChapter();
+			paper.name = "WKChapter " + i;
+			daoChapter.save(paper);
+		}
+		
 		papers = daoPaper.getAll();
 		chapters = daoChapter.getAll();
 		System.out.println(papers.size());

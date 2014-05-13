@@ -11,6 +11,7 @@
 package org.wangk.comper.feature.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -131,6 +132,26 @@ public class Trainer implements ITrainer {
 	public void bulkVariate(Set<Group> groups, float ratio){
 		for (Group group : groups) {
 			variate(group, ratio);
+		}
+	}
+	
+
+	@Override
+	public void increase(List<Group> ls) {
+		int pad = config.internal.maxGroup - ls.size();
+		if (pad > 3) {
+			ls.addAll(getInitGroupList(pad));
+		}
+	}
+	
+	@Override
+	public void reduct(List<Group> ls) {
+		Set<Group> set = new HashSet<>(ls);
+		ls.clear();
+		ls.addAll(set);
+		Collections.sort(ls);
+		while(ls.size() > config.internal.numGroup) {
+			ls.remove(0);
 		}
 	}
 	

@@ -50,7 +50,7 @@ public class Config implements Serializable {
 		cg.chapterIdSet = totalChapters;
 		cg.typeScoreAndNum = section;
 		cg.tolerance = tolerance;
-		
+		cg.numResult = numberOfResult;
 		cg.updateTotalScore();
 		return cg;
 	}
@@ -111,6 +111,9 @@ public class Config implements Serializable {
 		return numResult;
 	}
 
+	public void setTolerance(float t) {
+		this.tolerance = t;
+	}
 	public float getTolerance() {
 		return tolerance;
 	}
@@ -121,6 +124,16 @@ public class Config implements Serializable {
 
 	public void setInternal(SystemConfig internal) {
 		this.internal = internal;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Config [difficulty=" + difficulty + ", chapterIdSet="
+				+ chapterIdSet + ", typeScoreAndNum=" + typeScoreAndNum
+				+ ", totalScore=" + totalScore + "]";
 	}
 
 

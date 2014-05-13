@@ -7,6 +7,8 @@ import org.wangk.comper.dao.DAOQuestion;
 import org.wangk.comper.dao.QuestionService;
 import org.wangk.comper.feature.*;
 import org.wangk.comper.feature.model.QuestionType;
+import org.wangk.comper.model.WKChapter;
+import org.wangk.comper.model.WKQuestionMeta;
 import org.wangk.comper.util.Pair;
 
 import java.awt.BorderLayout;
@@ -17,8 +19,10 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -57,7 +61,7 @@ public class Choose extends JDialog {
 	private JSpinner spinner_answer;
 	private JSpinner spinner_explain;
 	private JSpinner spinner_application;
-	private JComboBox point;
+	private JComboBox<Integer> point;
 	private JTextField chapter;
 	private  JLabel score;
 	String show_String,acu_String;
@@ -70,7 +74,7 @@ public class Choose extends JDialog {
 	DAOQuestion daoQuestion;
 	QuestionService questionService;
 	
-	private Config config;
+	Config config;
 
 	/**
 	 * Create the dialog.
@@ -146,11 +150,11 @@ public class Choose extends JDialog {
 		label_4.setBounds(386, 129, 54, 15);
 		contentPanel.add(label_4);
 
-		JLabel label_5 = new JLabel("解答题");
+		JLabel label_5 = new JLabel("简答题");
 		label_5.setBounds(386, 161, 54, 15);
 		contentPanel.add(label_5);
 		
-		JLabel lblNewLabel = new JLabel("解析题");
+		JLabel lblNewLabel = new JLabel("解释题");
 		lblNewLabel.setBounds(386, 196, 54, 15);
 		contentPanel.add(lblNewLabel);
 		
@@ -183,10 +187,18 @@ public class Choose extends JDialog {
 		spinner_application.setBounds(514, 227, 74, 22);
 		contentPanel.add(spinner_application);
 		
+//		String kno_point[] = {"1","2","3","4","5","6"};
+//		point = new JComboBox(kno_point);
+		point = new JComboBox<>();
 		
-
-		String kno_point[] = {"1","2","3","4","5","6"};
-		point = new JComboBox(kno_point);
+		List<WKChapter> chapters = AppContext.daoChapter.getAll();
+		int id = chapters.get(0).id;
+		int size =  chapters.size();
+		List<Integer> ids = new ArrayList<>();
+		for (WKChapter c: chapters) {
+			point.addItem(c.id);
+		}
+		
 		point.setMaximumRowCount(4);
 		point.setSelectedIndex(1);
 		point.addActionListener(new ActionListener() {
@@ -303,31 +315,55 @@ public class Choose extends JDialog {
 						System.out.println("hard"+ hard);
 						
 						try {
+
+							Map<QuestionType, Pair<Integer, Integer>> typeMap = new HashMap<QuestionType, Pair<Integer,Integer>>();							
+							
 							int choose_score_int =Integer.parseInt(choose_score.getText());
 							int choose_number_int =(int) choose_number.getValue();
+							if (choose_number_int > 0 && choose_score_int > 0) {
+								typeMap.put(QuestionType.FILL_BLANKS, new Pair<Integer, Integer>(choose_score_int, choose_number_int));
+							}
 							int fill_score_int = Integer.parseInt(fill_score.getText());
 							int fill_number_int = (int) spinner_fill.getValue();
+							if (fill_number_int > 0 && fill_score_int > 0) {
+								typeMap.put(QuestionType.FILL_BLANKS, new Pair<Integer, Integer>(fill_score_int, fill_number_int));
+							}
 							int trf_score_int = Integer.parseInt(trf_score.getText());
 							int trf_number_int = (int) spinner_trf.getValue();
+							if (trf_number_int > 0 && trf_score_int > 0) {
+								typeMap.put(QuestionType.TRUE_FALSE, new Pair<Integer, Integer>(trf_score_int, trf_number_int));
+							}
 							int answer_score_int = Integer.parseInt(answer_score.getText());
 							int answer_number_int =(int) spinner_answer.getValue();
-							int explain_number_int = (int) spinner_explain.getValue();
-							int app_number_int = (int) spinner_application.getValue();
-							
-							Pair<Integer, Integer> choose_problem = new Pair<Integer, Integer>(choose_score_last,choose_number_int);
-							Pair<Integer, Integer> fill_problem =  new Pair<Integer, Integer>(fill_score_last, fill_number_int);
-							Pair<Integer, Integer> trf_problem =  new Pair<Integer, Integer>(trf_score_last, trf_number_int);
-							Pair<Integer, Integer> answer_problem = new Pair<Integer, Integer>(answer_score_last, answer_number_int);
-							Pair<Integer, Integer> explain_problem = new Pair<Integer, Integer>(explain_score_last, explain_number_int);
-							Pair<Integer, Integer> app_problem = new Pair<Integer, Integer>(app_score_last, explain_number_int);
-							
-							Map<QuestionType, Pair<Integer, Integer>> typeMap = new HashMap<QuestionType, Pair<Integer,Integer>>();							
-							typeMap.put(QuestionType.MULTI_CHOICE, choose_problem);
-							typeMap.put(QuestionType.FILL_BLANKS, fill_problem);
-							typeMap.put(QuestionType.TRUE_FALSE, trf_problem);
-							typeMap.put(QuestionType.SIMPLE_QA, answer_problem);
-							typeMap.put(QuestionType.EXPLAINATION, explain_problem);
-							typeMap.put(QuestionType.APPLICATION, app_problem);
+							if (answer_score_int > 0 && answer_number_int > 0) {
+								typeMap.put(QuestionType.SIMPLE_QA, 
+								new Pair<Integer, Integer>(answer_score_int, answer_number_int));
+							}
+							int explain_number_int = (int) spinner_explain.getValue();//explain_score_last
+							int app_number_int = (int) spinner_application.getValue();//app_score_last
+							if (explain_number_int > 0 && explain_score_last > 0) {
+								typeMap.put(QuestionType.EXPLAINATION, 
+									new Pair<Integer, Integer>(explain_score_last, explain_number_int));
+							}
+							if (app_number_int > 0 && app_score_last > 0) {
+								typeMap.put(QuestionType.APPLICATION, 
+									new Pair<Integer, Integer>(app_score_last, app_number_int));
+							}
+//							Pair<Integer, Integer> choose_problem = new Pair<Integer, Integer>(choose_score_last,choose_number_int);
+//							Pair<Integer, Integer> fill_problem =  new Pair<Integer, Integer>(fill_score_last, fill_number_int);
+//							Pair<Integer, Integer> trf_problem =  new Pair<Integer, Integer>(trf_score_last, trf_number_int);
+//							Pair<Integer, Integer> answer_problem = new Pair<Integer, Integer>(answer_score_last, answer_number_int);
+//							Pair<Integer, Integer> explain_problem = new Pair<Integer, Integer>(explain_score_last, explain_number_int);
+//							Pair<Integer, Integer> app_problem = new Pair<Integer, Integer>(app_score_last, explain_number_int);
+//							
+//							
+//							
+//							typeMap.put(QuestionType.MULTI_CHOICE, choose_problem);
+//							typeMap.put(QuestionType.FILL_BLANKS, fill_problem);
+//							typeMap.put(QuestionType.TRUE_FALSE, trf_problem);
+//							typeMap.put(QuestionType.SIMPLE_QA, answer_problem);
+//							typeMap.put(QuestionType.EXPLAINATION, explain_problem);
+//							typeMap.put(QuestionType.APPLICATION, app_problem);
 														
 							float tole = 0.02f;
 							
@@ -338,7 +374,14 @@ public class Choose extends JDialog {
 							else {
 								JOptionPane.showMessageDialog(null, "OK", "OK", JOptionPane.INFORMATION_MESSAGE);
 								
-								config =  Config.build((float)hard, range_Set, typeMap, 4, tole, SystemConfig.getDefault());
+								config =  Config.build(
+											(float)hard, 
+											range_Set, 
+											typeMap, 
+											SystemConfig.NUM_RESULT, 
+											SystemConfig.TOLERANCE, 
+											SystemConfig.getDefault()
+										);
 								Choose.this.dispose();
 							}
 							
@@ -369,9 +412,6 @@ public class Choose extends JDialog {
 	}
 	
 	
-	
-	
-	
 	public Config getConfig() {
 		return config;
 	}
@@ -392,6 +432,7 @@ public class Choose extends JDialog {
 				explain_score_last = temp_score;
 			if(e.getSource() == app_score)
 				app_score_last = temp_score;
+			
 		}
 		
 		@Override

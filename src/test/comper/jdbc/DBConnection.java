@@ -1,8 +1,10 @@
 package test.comper.jdbc;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -10,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.wangk.comper.context.XMLBeanAssembler;
+import org.wangk.comper.context.config.ClassLoaderInputStreamProvider;
 import org.wangk.comper.context.config.FileInputStreamProvider;
 import org.wangk.comper.context.config.InputStreamCallback;
 import org.wangk.comper.context.config.InputStreamSupport;
@@ -32,8 +35,8 @@ public class DBConnection {
 		final XMLBeanAssembler assembler = XMLBeanAssembler.getInstance();
 		assembler.setClassLoader(TestConnection.class.getClassLoader());
 		InputStreamSupport streamSupport = new InputStreamSupport();
-		streamSupport.setStreamProvider(new FileInputStreamProvider());
-		streamSupport.doInStream("src/context.xml", new InputStreamCallback() {
+		streamSupport.setStreamProvider(new ClassLoaderInputStreamProvider(this.getClass().getClassLoader()));
+		streamSupport.doInStream("context.xml", new InputStreamCallback() {
 			@Override
 			public void doWithStream(InputStream stream) throws Exception {
 				assembler.assemble(stream);
@@ -50,24 +53,24 @@ public class DBConnection {
 //		jdbc.execute("DROP TABLE IF EXISTS wk_chapter");
 //		jdbc.execute("DROP TABLE IF EXISTS wk_question_meta");
 //		jdbc.execute("DROP TABLE IF EXISTS wk_question");
-		
-		String buf = "";
-		try {
-			buf = new String(Files.readAllBytes(new File("sql/create_table_sqlite.sql").toPath()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		final StringBuilder builder = new StringBuilder(1024);
+		streamSupport.doInStream("create_table_sqlite.sql", new InputStreamCallback() {
+			@Override
+			public void doWithStream(InputStream stream) throws Exception {
+				InputStreamReader reader = new InputStreamReader(stream);
+				BufferedReader bReader = new BufferedReader(reader);
+				String buf;
+				while (null != (buf = bReader.readLine())) {
+					builder.append(buf);
+				}
+			}
+		});
 
-		for (String  s : buf.split(";")) {
-//			System.out.println(s);
+		for (String  s : builder.toString().split(";")) {
 			if (s.length() > 10) {
 				jdbc.execute(s);
 			}
 		}
-//		<bean id="daoQuestion" class="org.wangk.comper.service.impl.DAOQuestion">
-//	<bean id="daoPaper" class="org.wangk.comper.dao.DAOPaper">
-//		<bean id="daoChapter" class="org.wangk.comper.dao.DAOChapter">
-	
 	}
 	
 //	public static void main(String...a) throws ParseException {

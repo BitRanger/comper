@@ -11,6 +11,7 @@
 package org.wangk.comper.feature;
 
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -40,7 +41,6 @@ public class TrainingField {
 	}
 	
 	List<Group> currentGroupList;
-	int trainingCount = 0;
 	List<Group> resultGroupList;
 	
 	public void prepare() {
@@ -54,8 +54,7 @@ public class TrainingField {
 		evaluator.setConfig(config);
 		trainer.setRandomGenerator(getRandomGenerator());
 		
-		currentGroupList = trainer.getInitGroupList(config.internal.numGroup);
-		trainingCount = 0;
+		currentGroupList = trainer.getInitGroupList(config.internal.maxGroup);
 		resultGroupList = null;
 	}
 	
@@ -64,8 +63,11 @@ public class TrainingField {
 	 * 
 	 */
 	public void train() {	
-		
+
+		int trainingCount = 0;
 		do {
+			trainingCount++;
+			trainer.increase(currentGroupList);
 			//交叉
 			int crossCount = 0;
 			while (crossCount <= config.internal.numCrossOver) {
@@ -84,9 +86,11 @@ public class TrainingField {
 
 			//进行交叉，也就是从备选库里选同分值，同类型的题进行替换
 			trainer.bulkVariate(toVariant, config.internal.ratioVariant);
+			trainer.reduct(currentGroupList);
 			resultGroupList = currentGroupList;
 			System.gc();
 			System.gc();
+			adjust(trainingCount);
 		} while (!evaluator.isQualified(resultGroupList)
 				&& trainingCount <= config.internal.maxTraining);
 		
@@ -101,19 +105,29 @@ public class TrainingField {
 		List<Group> oldGroups = currentGroupList;
 		prepare();
 		if (oldGroups != null) {
-			currentGroupList = oldGroups;
 			trainer.teamUp(currentGroupList, oldGroups);
 		}
 		train();
 	}
 	
+	private void adjust(int count) {
+		if (count * 4 / 3 > config.internal.numTraining) {
+			config.setTolerance(config.getTolerance() + 0.08F);
+		} else if (count * 3 / 2 > config.internal.numTraining) {
+			config.setTolerance(config.getTolerance() + 0.15F);
+		}
+	}
 	
 	/**
 	 * 
 	 * @return 排好序的结果集，第一个是最佳结果
 	 */
 	public List<Group> getSortedResult() {
-		return resultGroupList;
+		ArrayList<Group> ret = new ArrayList<>(12);
+		List<Group> ls = resultGroupList;
+		ret.addAll(ls.subList(ls.size() - config.getNumResult(), ls.size()));
+//		ls.addAll(resultGroupList.subList(0, config.getNumResult()));
+		return ret;
 	}
 	
 	

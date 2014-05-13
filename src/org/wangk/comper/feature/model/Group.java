@@ -12,9 +12,8 @@ package org.wangk.comper.feature.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.EnumMap;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.wangk.comper.model.WKQuestionMeta;
 
@@ -130,12 +129,15 @@ public class Group implements Serializable, Comparable<Group> {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder(1024);
+		builder.append(new Date().toString()).append('\n')
+		.append("Adaptability:").append(this.summary.adaptability).append('\n');
+		
 		for (QuestionType tp : this.typeMap.keySet()) {
 			ArrayList<WKQuestionMeta> ls = typeMap.get(tp);
 			if (ls.size() > 0) {
-				builder.append(tp.toString()).append('\n');
+				builder.append(tp.toString()).append(':').append('\n');
 				for (WKQuestionMeta wkQuestionMeta : ls) {
-					builder.append('\t').append(wkQuestionMeta.toString()).append('\n');
+					builder.append('\t').append(wkQuestionMeta.printStr()).append('\n');
 				}
 				builder.append('\n');
 			}

@@ -81,4 +81,6 @@ public interface ITrainer extends IRefreshable {
 
 	public void setRandomGenerator(IRandomGenerator randomGenerator);
 
+	public void increase(List<Group> ls);
+	public void reduct(List<Group> ls);
 }
