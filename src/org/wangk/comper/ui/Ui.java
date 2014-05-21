@@ -377,10 +377,14 @@ System.out.println(config);
 		System.out.println("Ui.getPaper()");
 		List<Group> groups = field.getSortedResult();
 		System.out.println("Ui.getPaper()");
-		result[0] = groups.get(groups.size() - 1).toString();
-		result[1] = groups.get(groups.size() - 2).toString();
-		result[2] = groups.get(groups.size() - 3).toString();
-		System.out.println(result[0]);
+		result[0] = AppContext.questionService.toPaper(groups.get(groups.size() - 1)).toString();
+		result[1] = AppContext.questionService.toPaper(groups.get(groups.size() - 2)).toString();
+		result[2] = AppContext.questionService.toPaper(groups.get(groups.size() - 3)).toString();
+		
+//		result[0] = groups.get(groups.size() - 1).toString();
+//		result[1] = groups.get(groups.size() - 2).toString();
+//		result[2] = groups.get(groups.size() - 3).toString();
+//		System.out.println(result[0]);
 		return true;
 	}
 	

@@ -49,6 +49,9 @@ public class Evaluator implements IEvaluator{
 			group.summary.adaptability = adap;
 			group.summary.difficulty = difficulty;
 			group.summary.coverage = coverage;
+
+//			System.out.print("Evaluator.evaluate()  ");
+//			System.out.println(group.summary.coverage);
 			
 			currentStamp = (int) (group.hashCode()
 					* config.internal.weightCoverage 
@@ -69,7 +72,9 @@ public class Evaluator implements IEvaluator{
 	public boolean isQualified(List<Group> groups) {
 		bulkEvaluate(groups);
 		Collections.sort(groups);
-		float adap = 1.0F - groups.get(groups.size() - 2).summary.adaptability;
+		float rs = config.getNumResult();
+		rs *= 0.5;
+		float adap = 1.0F - groups.get(groups.size() - (int)rs).summary.adaptability;
 		System.out.print("Evaluator.isQualified()\t\t Best Adap");
 		System.out.println(groups.get(groups.size() - 1).summary.adaptability);
 		

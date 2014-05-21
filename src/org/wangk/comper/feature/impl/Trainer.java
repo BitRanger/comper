@@ -38,6 +38,8 @@ public class Trainer implements ITrainer {
 
 	@Override
 	public List<Group> getInitGroupList(int size) {
+//		System.out.println();
+//		System.out.println(size);
 		Assert.notNull(config);
 		questionSerive.loadAll();
 		Set<Group> groups = new HashSet<>(size);
@@ -146,11 +148,15 @@ public class Trainer implements ITrainer {
 	
 	@Override
 	public void reduct(List<Group> ls) {
+		//去重
 		Set<Group> set = new HashSet<>(ls);
 		ls.clear();
 		ls.addAll(set);
+		
 		Collections.sort(ls);
 		while(ls.size() > config.internal.numGroup) {
+//			System.out.println("Trainer.reduct()");
+//			System.out.println(ls.get(0).summary.adaptability);
 			ls.remove(0);
 		}
 	}

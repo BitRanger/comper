@@ -17,6 +17,7 @@ import org.wangk.comper.feature.impl.RandomGenerator;
 import org.wangk.comper.feature.impl.Trainer;
 import org.wangk.comper.feature.model.Group;
 import org.wangk.comper.feature.model.QuestionType;
+import org.wangk.comper.feature.model.TestPaper;
 import org.wangk.comper.util.Pair;
 
 import test.comper.jdbc.DBConnection;
@@ -62,9 +63,9 @@ public class Demo {
 		//1 道应用题
 		sec.put(QuestionType.APPLICATION, new Pair<>(20, 1));
 		
-		// 生成本次的设置（难度 0.6，容忍度0.4
+		// 生成本次的设置（难度 0.55，容忍度0.4
 		Config config = 
-		Config.build(0.6F, chaps, sec, 5, 0.34F, SystemConfig.getDefault());
+		Config.build(0.6F, chaps, sec, 5, 0.35F, SystemConfig.getDefault());
 		
 		field.setConfig(config);
 		field.prepare();
@@ -75,8 +76,10 @@ public class Demo {
 		for (Group group : groups) {
 			System.out.println(group.summary.adaptability);
 		}
-		System.out.println(groups.get(groups.size() - 1));
-//		System.out.println(groups.get(groups.size() - 2));
+//		System.out.println(groups.get(groups.size() - 1));
+		System.err.println("Demo.main()");
+		TestPaper paper = connection.questionService.toPaper(groups.get(groups.size() - 1));
+		System.out.println(paper);
 		//*/
 	}
 

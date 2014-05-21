@@ -25,6 +25,10 @@ public class DAOChapter {
 		return jdbcAux.queryForList(SELECT, MAPPING);
 	}
 	
+	public WKChapter get(int id) {
+		return jdbcAux.queryForObject("select * from wk_chapter where id = " + id, MAPPING);
+	}
+	
 	public List<WKChapter> getByPaper(int id) {
 		return jdbcAux.queryForList(
 				SELECT + " as C inner join r_paper_chapter as R "

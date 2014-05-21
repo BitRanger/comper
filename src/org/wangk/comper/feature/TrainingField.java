@@ -97,7 +97,6 @@ public class TrainingField {
 		Collections.sort(resultGroupList);
 	}
 	
-	
 	public void reTrain(Config config) {
 		this.config = config;
 		this.trainer.refresh(config);
@@ -111,10 +110,14 @@ public class TrainingField {
 	}
 	
 	private void adjust(int count) {
-		if (count * 4 / 3 > config.internal.numTraining) {
-			config.setTolerance(config.getTolerance() + 0.08F);
-		} else if (count * 3 / 2 > config.internal.numTraining) {
-			config.setTolerance(config.getTolerance() + 0.15F);
+
+//		System.out.print("TrainingField.adjust()  ");
+		if (count * 10 / 9 > config.internal.maxGroup) {
+			config.setTolerance(config.getTolerance() + 0.0005F);
+			System.out.println(config.getTolerance());
+		} else if (count * 8 / 7 > config.internal.maxGroup) {
+			config.setTolerance(config.getTolerance() + 0.0005F);
+//			System.out.println(config.getTolerance() + "   [002");
 		}
 	}
 	

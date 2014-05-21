@@ -15,7 +15,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+
 import javax.inject.Inject;
+
 import org.wangk.comper.db.jdbc.JdbcAux;
 import org.wangk.comper.db.jdbc.JdbcUtil;
 import org.wangk.comper.db.jdbc.stmt.StatementCreator;
@@ -23,6 +25,7 @@ import org.wangk.comper.db.orm.RowMapping;
 import org.wangk.comper.feature.model.QuestionType;
 import org.wangk.comper.model.WKQuestionContent;
 import org.wangk.comper.model.WKQuestionMeta;
+import org.wangk.comper.util.Triple;
 
 
 
@@ -33,6 +36,25 @@ public class DAOQuestion {
 		"SELECT id, id_paper, id_chapter, type, difficulty, score FROM wk_question_meta ";
 	
 	@Inject JdbcAux jdbcAux;
+	
+	
+	public Triple<String, String, String> getContent(int id) {
+		
+		return jdbcAux.queryForObject(
+		"select * from wk_question where id_meta = " + id, 
+		
+		new RowMapping<Triple<String, String, String>>() {
+			@Override
+			public Triple<String, String, String> rowToObjec(ResultSet arg0) throws SQLException {
+				Triple<String, String, String> t = new Triple<>();
+				t.first = arg0.getString("content");
+				t.second = arg0.getString("answer");
+				t.third = arg0.getString("comment");
+				return t;
+			}
+		});
+	}
+	
 	
 	public List<WKQuestionMeta> getAll() {
 		List<WKQuestionMeta> list = jdbcAux.queryForList(new StatementCreator() {

@@ -28,6 +28,7 @@ public class Group implements Serializable, Comparable<Group> {
 	private static final long serialVersionUID = -2604770597064509121L;
 
 	public EnumMap<QuestionType, ArrayList<WKQuestionMeta>> typeMap;
+	
 	public Group() {
 		typeMap = new EnumMap<QuestionType, ArrayList<WKQuestionMeta>>(QuestionType.class);
 		
@@ -37,8 +38,8 @@ public class Group implements Serializable, Comparable<Group> {
 		typeMap.put(QuestionType.SIMPLE_QA,  new ArrayList<WKQuestionMeta>(256));
 		typeMap.put(QuestionType.EXPLAINATION,  new ArrayList<WKQuestionMeta>(256));
 		typeMap.put(QuestionType.APPLICATION,  new ArrayList<WKQuestionMeta>(256));
-		
 	}
+	
 //	/**
 //	 * 每种题型
 //	 */

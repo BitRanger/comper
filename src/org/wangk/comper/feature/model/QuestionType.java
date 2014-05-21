@@ -20,41 +20,48 @@ public enum QuestionType {
 	/**
 	 * 单选
 	 */
-	MULTI_CHOICE(2),
+	MULTI_CHOICE(2, "\u9009\u62E9\u9898"),
 	/**
 	 * 填空题
 	 */
-	FILL_BLANKS(4),
+	FILL_BLANKS(4, "\u586B\u7A7A\u9898"),
 	
 	/**
 	 * 判断题
 	 */
-	TRUE_FALSE(8),
+	TRUE_FALSE(8, "\u5224\u65AD\u9898"),
 	
 	/**
 	 * 简答题
 	 */
-	SIMPLE_QA(16),
+	SIMPLE_QA(16, "\u7B80\u7B54\u9898"),
 	
 	/**
 	 * 解释题
 	 */
-	EXPLAINATION(32),
+	EXPLAINATION(32, "\u89E3\u91CA\u9898"),
 	
 	/**
 	 * 应用题
 	 */
-	APPLICATION(64);
+	APPLICATION(64, "\u5E94\u7528\u9898");
 	
 	private final int value;
-
-	private QuestionType(final int newValue) {
+	private final String zhName;
+	private QuestionType(final int newValue, String n) {
 		value = newValue;
+		zhName = n;
 	}
 	public int intValue() {
 		return value;
 	}
 	
+	/**
+	 * @return the zhName
+	 */
+	public String getZhName() {
+		return zhName;
+	}
 	public static QuestionType lookup(int i) {
 		switch (i) {
 		case 2:

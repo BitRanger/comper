@@ -19,7 +19,7 @@ import org.wangk.comper.feature.model.QuestionType;
  * 
  * 试题的元信息
  */
-public class WKQuestionMeta implements Serializable, Comparable<WKQuestionMeta> {
+public class WKQuestionMeta implements Serializable /*, Cloneable*/, Comparable<WKQuestionMeta> {
 	
 	private static final long serialVersionUID = 8796584201528492642L;
 	
@@ -37,7 +37,16 @@ public class WKQuestionMeta implements Serializable, Comparable<WKQuestionMeta> 
 	public int compareTo(WKQuestionMeta o) {
 		return o.id - this.id;
 	}
-
+//	@Override
+//	public WKQuestionMeta clone() {
+//		try {
+//			super.clone();
+//		} catch (CloneNotSupportedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return null;
+//	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;

@@ -31,7 +31,9 @@ public class DAOPaper {
 	public List<WKPaper> getAll() {
 		return jdbcAux.queryForList(SELECT, MAPPING);
 	}
-	
+	public WKPaper get(int id) {
+		return jdbcAux.queryForObject("select * from wk_paper where id = " + id, MAPPING);
+	}
 	public void addChapter(int paperId, int chapterId) {
 		jdbcAux.execute("insert into r_paper_chapter(id_paper, id_chapter)values(?,?)",
 				paperId, chapterId);

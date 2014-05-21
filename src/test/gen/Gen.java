@@ -28,6 +28,22 @@ public class Gen extends DBConnection {
 	}
 
 
+//	@Test
+	public void populateQContent() {
+		jdbc.execute("delete from wk_question");
+		List<WKQuestionMeta> ms = daoQuestion.getAll();
+		int i = 0;
+		for (WKQuestionMeta m : ms) {
+			jdbc.execute(
+		"insert into wk_question(id_meta, content, answer, comment)values(?,?,?,?)",
+					m.id,
+					" question content " + m.type.getZhName(),
+					" answer to" + m.id,
+					"no comment");
+			System.out.println(i++);
+		}
+		System.out.println("Gen.populateQContent()");
+	}
 
 	/**
 	 * plan
@@ -46,7 +62,7 @@ public class Gen extends DBConnection {
 	 * APPLICATION 20 score 1 * 20
 	 *  
 	 */
-	@Test
+//	@Test
 	public void go() {
 		
 		for (int i = 0; i < 20; i++) {

@@ -5,12 +5,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.wangk.comper.context.R.str;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -48,6 +51,9 @@ public static class TestClass {
 		Map<String, Object> map2 = new HashMap<>();
 		map2.put("obj", tc);
 		map.put("map", map2);
+		List<String> strLs = new ArrayList<>();
+		strLs.add("123");
+		map.put("strLs", strLs);
 		Writer writer  = new OutputStreamWriter(new FileOutputStream("success2.html"),"UTF-8");  
 		template.process(map, writer);
 		System.out.println("TestHTMLGen.test()");
