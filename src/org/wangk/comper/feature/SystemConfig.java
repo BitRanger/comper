@@ -31,6 +31,9 @@ public class SystemConfig implements Serializable {
 	public static final float TOLERANCE = 0.35F;
 	public static final int NUM_RESULT = 4;
 	
+	public float DIFF_LOWER = 0.35F;
+	public float DIFF_UPPER = 0.95F;
+	
 	public float weightCoverage = 0.5F;
 	public float weightDifficulty = 0.5F;
 	/**

@@ -69,14 +69,14 @@ public class Config implements Serializable {
 
 	//每种题型的总的分值和总题量题量，
 	//例如选择题 20分，共4道，该pair值为 pair.first == 20; pair.second == 4 
-	private Map<QuestionType, Pair<Integer, Integer>>	
+	public Map<QuestionType, Pair<Integer, Integer>>	
 									typeScoreAndNum;
 	
 	/**
 	 *  结束条件
 	 */
-	private int numResult;// 结果数量
-	private float tolerance;//最佳group与期望的误差
+	public int numResult;// 结果数量
+	public float tolerance;//最佳group与期望的误差
 	
 	/**
 	 * 根据每种题型的分值，

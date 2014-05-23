@@ -54,7 +54,7 @@ public class Choose extends JDialog {
 	private JTextField explain_score;
 	private JTextField app_score;
 	private JSlider slider_hard;
-	private JSpinner spinner_hard;
+	//private JSpinner spinner_hard;
 	private JSpinner choose_number;
 	private JSpinner spinner_fill;
 	private JSpinner spinner_trf;
@@ -62,6 +62,7 @@ public class Choose extends JDialog {
 	private JSpinner spinner_explain;
 	private JSpinner spinner_application;
 	private JComboBox<Integer> point;
+	private JComboBox comboBox_hard ;
 	private JTextField chapter;
 	private  JLabel score;
 	String show_String,acu_String;
@@ -96,9 +97,9 @@ public class Choose extends JDialog {
 			contentPanel.add(label);
 		}
 		
-		slider_hard = new JSlider(0,100,50);
-		slider_hard.setMajorTickSpacing(20);
-		slider_hard.setMinorTickSpacing(5);
+		slider_hard = new JSlider(1,10,5);
+		slider_hard.setMajorTickSpacing(1);
+		slider_hard.setMinorTickSpacing(1);
 		slider_hard.setPaintLabels(true);
 		slider_hard.setPaintTicks(true);
 		show_String = acu_String =""; 
@@ -115,14 +116,15 @@ public class Choose extends JDialog {
 		slider_hard.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				int x = slider_hard.getValue();
-				spinner_hard.setValue(new Double(x)/100);			
-				
+				//spinner_hard.setValue(new Double(x)/100);			
+				comboBox_hard.setSelectedIndex(x-1);
 			}
 		});
 		//slider_hard.setMaximum(1);
 		
 	
 		slider_hard.setBounds(165, 22, 151, 48);
+		
 		contentPanel.add(slider_hard);
 
 		JLabel label = new JLabel("知识点");
@@ -217,20 +219,38 @@ public class Choose extends JDialog {
 			}
 		});
 		point.setBounds(175, 88, 141, 21);
-		contentPanel.add(point);		
-
-		spinner_hard = new JSpinner();		
-		spinner_hard.setModel(new SpinnerNumberModel(0.5, 0.0, 1.0, 0.05));		
+		contentPanel.add(point);	
 		
-		spinner_hard.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				double x = (double) spinner_hard.getValue();
-				slider_hard.setValue(new Integer((int) (x*100)));
+		
+//
+//		spinner_hard = new JSpinner();		
+//		spinner_hard.setModel(new SpinnerNumberModel(0.5, 0.0, 1.0, 0.05));		
+//		
+//		spinner_hard.addChangeListener(new ChangeListener() {
+//			public void stateChanged(ChangeEvent e) {
+//				double x = (double) spinner_hard.getValue();
+//				slider_hard.setValue(new Integer((int) (x*100)));
+//			}
+//		});
+//		
+//		spinner_hard.setBounds(98, 22, 49, 22);
+//		contentPanel.add(spinner_hard);
+		
+		String string[] ={"1","2","3","4","5","6","7","8","9","10"};
+		comboBox_hard = new JComboBox(string);
+		comboBox_hard.setSelectedIndex(4);
+		comboBox_hard.setBounds(118, 22, 43, 21);
+		contentPanel.add(comboBox_hard);
+		comboBox_hard.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				String x = comboBox_hard.getSelectedObjects()[0]+"";
+				slider_hard.setValue(Integer.parseInt(x.trim()));
+				
 			}
 		});
-		
-		spinner_hard.setBounds(98, 22, 49, 22);
-		contentPanel.add(spinner_hard);
 
 		JLabel label_6 = new JLabel("题目个数");
 		label_6.setBounds(514, 22, 54, 15);
@@ -311,8 +331,15 @@ public class Choose extends JDialog {
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
 						// TODO Auto-generated method stub
-						double hard = (double) spinner_hard.getValue();
-						System.out.println("hard"+ hard);
+						//double hard = 0.2;//(double) spinner_hard.getValue();
+//						int iiiiii=  slider_hard.get
+						float hard =Float.parseFloat(comboBox_hard.getSelectedObjects()[0]+"") ;
+						SystemConfig temp = SystemConfig.getDefault();
+						hard = (hard - 1) / 10 * (temp.DIFF_UPPER - temp.DIFF_LOWER) + temp.DIFF_LOWER;
+						
+//						System.out
+//								.println("Choose.Choose(...).new ActionListener() {...}.actionPerformed()");
+//						System.out.println("hard["+ hard);
 						
 						try {
 

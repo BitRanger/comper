@@ -120,15 +120,17 @@ public class Enter extends JDialog {
 		label_4.setBounds(21, 389, 54, 15);
 		contentPanel.add(label_4);
 
+		
+		//与数据库相连
 		String point_s[]={"1","2","3","4","5"};
 		comboBox_points = new JComboBox(point_s);
-		comboBox_points.setBounds(463, 295, 141, 21);
+		comboBox_points.setBounds(431, 295, 102, 21);
 		contentPanel.add(comboBox_points);
 		comboBox_points.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
+				// TODO Auto-generated method stub431, 295, 102, 2
 				String string = comboBox_points.getSelectedObjects()[0]+"";
 				string = string.trim();
 				textField_points.setText(string);
@@ -145,12 +147,12 @@ public class Enter extends JDialog {
 		contentPanel.add(label_6);
 		
 		textField_points = new JTextField("1");
-		textField_points.setBounds(463, 352, 141, 21);
+		textField_points.setBounds(431, 352, 215, 21);
 		contentPanel.add(textField_points);
 		textField_points.setColumns(10);
 		
 		JLabel label_7 = new JLabel("所属试卷");
-		label_7.setBounds(656, 298, 54, 15);
+		label_7.setBounds(689, 298, 54, 15);
 		contentPanel.add(label_7);
 		/*
 		textField_paper = new JTextField("0");
@@ -162,9 +164,36 @@ public class Enter extends JDialog {
 		for(int i =0;i<10;i++)
 			comboBox_paper.addItem(i);
 		
-		comboBox_paper.setBounds(656, 352, 213, 21);
+		comboBox_paper.setBounds(688, 352, 213, 21);
 		contentPanel.add(comboBox_paper);
 		comboBox_paper.setSelectedIndex(0);
+		
+		JButton addPoint = new JButton("添加知识点");
+		addPoint.setBounds(543, 294, 103, 23);
+		contentPanel.add(addPoint);
+		addPoint.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				Chapter chapter = new Chapter();
+				chapter.setVisible(true);
+				
+			}
+		});
+		
+		JButton addPaper = new JButton("添加试卷");
+		addPaper.setBounds(767, 294, 116, 23);
+		contentPanel.add(addPaper);
+		addPaper.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				Paper paper =new Paper();
+				paper.setVisible(true);
+			}
+		});
 		
 		
 		{

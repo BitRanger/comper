@@ -19,7 +19,7 @@ import org.wangk.comper.util.Assert;
  *
  */
 public class Constants {
-
+	
 	public static final float WEIGHT_DIFFICULTY = 0.4F;
 	public static final float WEIGHT_COVERAGE = 0.6F;
 	public static final int NUM_GROUP = 6;

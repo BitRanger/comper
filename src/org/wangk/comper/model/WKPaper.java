@@ -27,9 +27,10 @@ public class WKPaper implements Serializable {
 	
 	public String			name;
 	public String			description;
+	public String			name_publisher;
+
 	public int 				score;
 
-	public String			name_publisher;
 	
 	@Generated(value = { "" })
 	public Timestamp 		time_published;

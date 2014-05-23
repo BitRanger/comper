@@ -108,6 +108,8 @@ public final class AppContext {
 		
 		jdbc = beanAssembler.getBean("jdbcAux");
 		daoChapter = beanAssembler.getBean("daoChapter");
+//		System.out.println("AppContext.setUp()");
+//		System.out.println(daoChapter);
 		daoPaper = beanAssembler.getBean("daoPaper");
 		daoQuestion = beanAssembler.getBean("daoQuestion");
 		questionService = beanAssembler.getBean("questionService");

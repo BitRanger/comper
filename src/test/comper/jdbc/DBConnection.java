@@ -24,11 +24,11 @@ import org.wangk.comper.db.jdbc.JdbcAux;
 
 public class DBConnection {
 
-	public JdbcAux jdbc;
-	public DAOPaper daoPaper;
-	public DAOChapter daoChapter;
-	public DAOQuestion daoQuestion;
-	public QuestionService questionService;
+	public static JdbcAux jdbc;
+	public static DAOPaper daoPaper;
+	public static DAOChapter daoChapter;
+	public static DAOQuestion daoQuestion;
+	public static QuestionService questionService;
 	
 	public void connect() {
 		

@@ -7,17 +7,20 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import org.wangk.comper.context.AppContext;
 import org.wangk.comper.feature.Config;
 import org.wangk.comper.feature.IEvaluator;
 import org.wangk.comper.feature.IRandomGenerator;
 import org.wangk.comper.feature.SystemConfig;
 import org.wangk.comper.feature.TrainingField;
+import org.wangk.comper.feature.builder.HtmlGenerator;
 import org.wangk.comper.feature.impl.Evaluator;
 import org.wangk.comper.feature.impl.RandomGenerator;
 import org.wangk.comper.feature.impl.Trainer;
 import org.wangk.comper.feature.model.Group;
 import org.wangk.comper.feature.model.QuestionType;
 import org.wangk.comper.feature.model.TestPaper;
+import org.wangk.comper.model.WKPaper;
 import org.wangk.comper.util.Pair;
 
 import test.comper.jdbc.DBConnection;
@@ -26,12 +29,15 @@ public class Demo {
 
 	public static void main(String[] args) {
 		
-		DBConnection connection = new DBConnection();
-		connection.connect();
+		AppContext.setUp();
+		WKPaper paperX = new WKPaper();
+		paperX.name = "ttttest paper";
+		paperX.description = "ttttest discription";
+		AppContext.daoPaper.save(paperX);
 		///*
 		IEvaluator evaluator = new Evaluator();
 		Trainer trainer = new Trainer();
-		trainer.setQuestionSerive(connection.questionService);
+		trainer.setQuestionSerive(AppContext.questionService);
 		
 		IRandomGenerator rGenerator = new RandomGenerator();
 
@@ -65,7 +71,7 @@ public class Demo {
 		
 		// 生成本次的设置（难度 0.55，容忍度0.4
 		Config config = 
-		Config.build(0.6F, chaps, sec, 5, 0.35F, SystemConfig.getDefault());
+		Config.build(0.6F, chaps, sec, 5, 0.33F, SystemConfig.getDefault());
 		
 		field.setConfig(config);
 		field.prepare();
@@ -78,9 +84,26 @@ public class Demo {
 		}
 //		System.out.println(groups.get(groups.size() - 1));
 		System.err.println("Demo.main()");
-		TestPaper paper = connection.questionService.toPaper(groups.get(groups.size() - 1));
+		TestPaper paper = AppContext
+							.questionService
+							.toPaper(groups.get(groups.size() - 1));
+
 		System.out.println(paper);
-		//*/
+		
+		HtmlGenerator generator = new HtmlGenerator();
+		generator.setConfig(config);
+		generator.add(paper);
+		paper = AppContext
+				.questionService
+				.toPaper(groups.get(groups.size() - 2));
+		generator.add(paper);
+		
+		paper = AppContext
+				.questionService
+				.toPaper(groups.get(groups.size() - 3));
+		generator.add(paper);
+		
+		generator.output("test.html");
 	}
 
 }

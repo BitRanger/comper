@@ -20,10 +20,12 @@ import org.wangk.comper.feature.Config;
 import org.wangk.comper.feature.IEvaluator;
 import org.wangk.comper.feature.IRandomGenerator;
 import org.wangk.comper.feature.TrainingField;
+import org.wangk.comper.feature.builder.HtmlGenerator;
 import org.wangk.comper.feature.impl.Evaluator;
 import org.wangk.comper.feature.impl.RandomGenerator;
 import org.wangk.comper.feature.impl.Trainer;
 import org.wangk.comper.feature.model.Group;
+import org.wangk.comper.feature.model.TestPaper;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -34,6 +36,8 @@ public class Ui {
 
 	JFrame frame;
 	Config config;
+	HtmlGenerator htmlGenerator = new HtmlGenerator();
+	
 	private JLabel label_score;
 	private JLabel label_hard;
 	private JLabel label_range ;
@@ -89,7 +93,7 @@ public class Ui {
 	JMenu menuHelp;
 
 	JMenuItem itemOpen, itemNew, itemCopy, itemPrint, itemPaste, itemSave,
-			itemSavaAs, itemExport,itemModify,itemEnter;
+			itemSavaAs, itemExport,itemModify,itemEnter,itemAddChapter,itemAddPaper;
 
 	public Ui() {
 		initialize();
@@ -129,11 +133,11 @@ public class Ui {
 		/**
 		 * 创建各个菜单项
 		 */
-		itemEnter = new JMenuItem("录入题库");
+		itemEnter = new JMenuItem("添加试题");
 		itemEnter.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Enter enter = new Enter("录入题库");
+				Enter enter = new Enter("添加试题");
 				enter.setVisible(true);
 			}
 		});
@@ -154,21 +158,45 @@ public class Ui {
 				modify.setVisible(true);
 			}
 		});
+		itemAddPaper = new JMenuItem("添加试卷");
+		itemAddPaper.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				Paper paper =new Paper();
+				paper.setVisible(true);
+				
+			}
+		});
+		
+		itemAddChapter = new JMenuItem("添加知识点");
+		itemAddChapter.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				Chapter chapter = new Chapter();
+				chapter.setVisible(true);
+			}
+		});
 
 		/**
 		 * 合并各个菜单选项
 		 */
-		menuFile.add(itemNew);
-		menuFile.add(itemOpen);
-		menuFile.add(itemPrint);
-		menuFile.add(itemSavaAs);
-		menuFile.add(itemSave);
+		//menuFile.add(itemNew);
+		//menuFile.add(itemOpen);
+		//menuFile.add(itemPrint);
+		//menuFile.add(itemSavaAs);
+		//menuFile.add(itemSave);
 		menuFile.add(itemExport);
 
 		menuEidt.add(itemCopy);
 		menuEidt.add(itemPaste);
 		menuEidt.add(itemModify);
 		menuEidt.add(itemEnter);
+		menuEidt.add(itemAddChapter);
+		menuEidt.add(itemAddPaper);
 
 		/**
 		 * 将各个菜单加入菜单栏
@@ -176,8 +204,8 @@ public class Ui {
 
 		menuBar.add(menuFile);
 		menuBar.add(menuEidt);
-		menuBar.add(menuView);
-		menuBar.add(menuWindow);
+		//menuBar.add(menuView);
+		//menuBar.add(menuWindow);
 		menuBar.add(menuHelp);
 
 		frame.setJMenuBar(menuBar);
@@ -333,8 +361,14 @@ System.out.println(config);
 				}
 				// TODO Auto-generated method stub
 				//if(config.getDifficulty() == null)
+				System.out
+						.println("Ui.initialize().new ActionListener() {...}.actionPerformed()");
 				System.out.println("hard"+config.getDifficulty());
 				//setAll();
+				JOptionPane.showMessageDialog(null, "生成成功", "成功", JOptionPane.INFORMATION_MESSAGE);
+				htmlGenerator.output("test_paper.html");
+				System.err
+						.println("Ui.initialize().new ActionListener() {...}.actionPerformed()");
 			}
 		});		
 	}
@@ -377,9 +411,21 @@ System.out.println(config);
 		System.out.println("Ui.getPaper()");
 		List<Group> groups = field.getSortedResult();
 		System.out.println("Ui.getPaper()");
-		result[0] = AppContext.questionService.toPaper(groups.get(groups.size() - 1)).toString();
-		result[1] = AppContext.questionService.toPaper(groups.get(groups.size() - 2)).toString();
-		result[2] = AppContext.questionService.toPaper(groups.get(groups.size() - 3)).toString();
+		htmlGenerator.clear();
+		htmlGenerator.setConfig(config);
+		
+		
+		TestPaper paper = AppContext.questionService.toPaper(groups.get(groups.size() - 1));
+		htmlGenerator.add(paper);
+		result[0] = paper.toString();
+		
+		paper = AppContext.questionService.toPaper(groups.get(groups.size() - 2));
+		htmlGenerator.add(paper);
+		result[1] = paper.toString();
+		
+		paper = AppContext.questionService.toPaper(groups.get(groups.size() - 3));
+		htmlGenerator.add(paper);
+		result[2] = paper.toString();
 		
 //		result[0] = groups.get(groups.size() - 1).toString();
 //		result[1] = groups.get(groups.size() - 2).toString();

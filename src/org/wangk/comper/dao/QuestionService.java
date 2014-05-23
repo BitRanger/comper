@@ -70,8 +70,8 @@ public class QuestionService {
 	public TestQuestion getQuestion(WKQuestionMeta meta) {
 		if (daoChapter == null) {
 			daoChapter = AppContext.beanAssembler.getBean("daoChapter");
-			System.out.println("QuestionService.getQuestion()");
-			System.out.println(daoChapter);
+//			System.out.println("QuestionService.getQuestion()");
+//			System.out.println(daoChapter);
 		}
 		if (daoPaper == null) {
 			daoPaper = AppContext.beanAssembler.getBean("daoPaper");
@@ -122,14 +122,16 @@ public class QuestionService {
 		paper.difficulty = group.summary.difficulty;
 		
 		for (Map.Entry<QuestionType, ArrayList<WKQuestionMeta>> e : group.typeMap.entrySet()) {
-			ArrayList<TestQuestion> qs = new ArrayList<>();
-			Pair<QuestionType, ArrayList<TestQuestion>> p = new Pair<>();
-			p.first = e.getKey();
-			for (WKQuestionMeta m : e.getValue()) {
-				qs.add(getQuestion(m));
+			if (e.getValue().size() > 0) {
+				ArrayList<TestQuestion> qs = new ArrayList<>();
+				Pair<QuestionType, ArrayList<TestQuestion>> p = new Pair<>();
+				p.first = e.getKey();
+				for (WKQuestionMeta m : e.getValue()) {
+					qs.add(getQuestion(m));
+				}
+				p.second = qs;
+				paper.add(p);
 			}
-			p.second = qs;
-			paper.add(p);
 		}
 		return paper;
 	}

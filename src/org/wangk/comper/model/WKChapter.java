@@ -19,6 +19,7 @@ public class WKChapter implements Serializable {
 	
 	public int 				id;
 	public Timestamp 		time_created;
+	
 	public String 			name;
 	public String 			description;
 	
