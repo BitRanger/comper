@@ -1,18 +1,26 @@
 /*******************************************************************************
- * Copyright (c) 2014 WangKang.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the GNU Public License v3.0
- * which accompanies this distribution, and is available at
- * http://www.gnu.org/licenses/gpl.html
+ * Copyright 2014 Cai Bowen Zhou Liangpeng
  * 
- * Contributors:
- *    WangKang. - initial API and implementation
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  ******************************************************************************/
 package org.wangk.comper.context;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.Calendar;
@@ -28,6 +36,9 @@ import org.wangk.comper.dao.DAOPaper;
 import org.wangk.comper.dao.DAOQuestion;
 import org.wangk.comper.dao.QuestionService;
 import org.wangk.comper.db.jdbc.JdbcAux;
+import org.wangk.comper.feature.TrainingField;
+
+import com.mchange.v2.c3p0.jboss.C3P0PooledDataSource;
 
 
 /**
@@ -75,12 +86,6 @@ public final class AppContext {
 	
 	public static final IBeanAssembler		beanAssembler = XMLBeanAssembler.getInstance();
 	
-	public static DAOPaper daoPaper;
-	public static DAOChapter daoChapter;
-	public static DAOQuestion daoQuestion;
-	public static JdbcAux jdbc;
-	public static  QuestionService questionService;
-	
 	public static Date now() {
 		return defaults.calendar.getTime();
 	}
@@ -106,26 +111,35 @@ public final class AppContext {
 			}
 		});
 		
-		jdbc = beanAssembler.getBean("jdbcAux");
-		daoChapter = beanAssembler.getBean("daoChapter");
-//		System.out.println("AppContext.setUp()");
-//		System.out.println(daoChapter);
-		daoPaper = beanAssembler.getBean("daoPaper");
-		daoQuestion = beanAssembler.getBean("daoQuestion");
-		questionService = beanAssembler.getBean("questionService");
-		
-		String buf = "";
-		try {
-			buf = new String(Files.readAllBytes(new File("sql/create_table_sqlite.sql").toPath()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 
-		for (String  s : buf.split(";")) {
-			if (s.length() > 10) {
-				jdbc.execute(s);
+		
+		JdbcAux jdbc = beanAssembler.getBean("jdbcAux");
+//		final String buf;
+//		try {
+//			buf = new String(Files.readAllBytes(
+//					new File("./create_table_sqlite.sql").toPath()
+////					new File("sql/create_table_sqlite.sql").toPath()
+//					));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		for (String  s : buf.split(";")) {
+//			if (s.length() > 10) {
+//				jdbc.execute(s);
+//			}
+//		}
+
+		final StringBuilder builder = new StringBuilder(1024);
+		streamSupport.doInStream("create_table_sqlite.sql", new InputStreamCallback() {
+			@Override
+			public void doWithStream(InputStream stream) throws Exception {
+				BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+				String line;
+				while (null != (line = reader.readLine())) {
+					builder.append(line);
+				}
 			}
-		}
+		});
 	}
 	
 	private AppContext(){}

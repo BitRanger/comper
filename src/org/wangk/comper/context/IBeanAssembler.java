@@ -1,89 +1,98 @@
 /*******************************************************************************
- * Copyright (c) 2014 WangKang.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the GNU Public License v3.0
- * which accompanies this distribution, and is available at
- * http://www.gnu.org/licenses/gpl.html
+ * Copyright 2014 Cai Bowen Zhou Liangpeng
  * 
- * Contributors:
- *    WangKang. - initial API and implementation
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  ******************************************************************************/
 package org.wangk.comper.context;
 
 
 import java.io.File;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
+ * Assemble java beans
  * 
  * @author BowenCai
  *
  */
-public interface IBeanAssembler extends Serializable {
-
-	/**
-	 * these properties serves as the XLD
-	 */
-	public static final String ROOT = "beans";
+public interface IBeanAssembler {
 	
-	public static final String BEAN = "bean";
-	public static final String BEAN_ID = "id";
-	public static final String BEAN_CLASS = "class";
-	public static final String BEAN_PROPERTY = "property";
-
-	/**
-	 * specify singleton bean, false by default
-	 */
-	public static final String BEAN_SINGLETON = "singleton";
+	public static final String LOGGER_NAME = "IBeanAssembler";
 	
-	public static final String PROPERTY_NAME = "name";
-	public static final String PROPERTY_LIST = "list";
-	public static final String PROPERTY_VALUE = "value";
-	public static final String PROPERTY_REF = "ref";
+	public void setClassLoader(@Nonnull ClassLoader loader);
+	@Nonnull
+	public ClassLoader getClassLoader();
 	
-
-	public void setClassLoader(ClassLoader loader);
 	/**
 	 * build all beans.
-	 * No exception is handled in the assembling of java beans 
-	 * exception is thrown directly to the higher level.
 	 * 
-	 * This is because this function is invoked only at the very beginning of the application
+	 * Because this function is invoked only at the very beginning of the application
+	 *   no exception is handled in the assembling of java beans 
+	 * exception is thrown directly to the higher level.
 	 * 
 	 * @throws Exception 
 	 */
-	public void 		assemble(final InputStream in) throws Exception;
-	public void			assemble(final File file) throws Exception;
+	public void 		assemble(@Nonnull final InputStream in) throws Exception;
+	public void			assemble(@Nonnull final File file) throws Exception;
+	
 	/**
 	 * 
 	 * @param id
-	 * @return
+	 * @return null if not found or exception is thrown in creating non-singleton bean
 	 * @throws Exception when creating beans (if bean is not singleton)
 	 */
-	public<T> T 		getBean(String id);
+	@Nullable
+	public<T> T 		getBean(@Nonnull String id);
+	
+	@Nullable
+	public Pod 			getPod(@Nonnull String id);
+	
 	
 	/**
 	 * @param clazz
-	 * @return beans of this type
+	 * @return a set of beans of that is instance of this class (including derived)
 	 */
-	public Set<Object>	getBeans(Class<?> clazz);
+	@Nullable
+	public Set<Object>	getBeans(@Nonnull Class<?> clazz);
 	
 	/**
 	 * the newly added bean is singleton
 	 * @param id
 	 * @param bean
+	 * @param lifeSpan bean lifes
 	 * @return true bean added, false cannot add bean(already exists)
 	 */
-	public boolean 		addBean(String id, Object bean);
+	public boolean addBean(@Nonnull String id, @Nonnull Object bean, @Nonnull int lifeSpan);
+	
+	/**
+	 * default life Integer.MAX_VALUE
+	 * @param id
+	 * @param bean
+	 * @return
+	 */
+	public boolean 		addBean(@Nonnull String id, @Nonnull Object bean);
 	
 	/**
 	 * 
 	 * @param id
 	 * @return bean reference if found, null if not found
+	 * @throws Exception 
 	 */
-	public<T> T 		removeBean(String id);
+	public void 		removeBean(@Nonnull String id);
 	
 	/**
 	 * update singleton
@@ -91,21 +100,24 @@ public interface IBeanAssembler extends Serializable {
 	 * @param bean
 	 * @throws Exception
 	 */
-	public<T> void 		updateBean(String id, T bean) throws Exception; 
+	public<T> void 		updateBean(@Nonnull String id, @Nonnull T bean); 
 	
-	public boolean 		contains(String id);
+	/**
+	 * if contains bean of this id
+	 * @param id
+	 * @return
+	 */
+	public boolean 		contains(@Nonnull String id);
 	
-	public boolean 		isSingletion(String id);
-	
-	public static interface Visitor extends Serializable {
-		public void visit(Object bean);
-	}
-	
+	public boolean 		isSingletion(@Nonnull String id);
+
+	public boolean 		contains(@Nonnull Class<?> clazz);
+
 	/**
 	 * 
 	 * @param visitor
 	 * @throws Exception when creating beans (if bean is not singleton)
 	 */
-	public void inTake(Visitor visitor);
+	public void inTake(@Nonnull IAssemlberVisitor visitor);
 
 }

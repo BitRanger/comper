@@ -1,12 +1,17 @@
 /*******************************************************************************
- * Copyright (c) 2014 WangKang.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the GNU Public License v3.0
- * which accompanies this distribution, and is available at
- * http://www.gnu.org/licenses/gpl.html
+ * Copyright 2014 Cai Bowen Zhou Liangpeng
  * 
- * Contributors:
- *    WangKang. - initial API and implementation
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  ******************************************************************************/
 package org.wangk.comper.context;
 
@@ -16,6 +21,11 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.Nullable;
 
 /**
  * Traits type information, as well as providing reflection utilities
@@ -24,6 +34,30 @@ import java.lang.reflect.TypeVariable;
  *
  */
 public final class TypeTraits {
+	
+	
+	public static List<Class<?>> 
+	findParamTypes(Class<?> klass, String fieldName) throws NoSuchFieldException {
+		
+		Set<Field> fields = Klass.getEffectiveField(klass);
+		for (Field field : fields) {
+			if (field.getName().equals(fieldName)) {
+				Type type = field.getGenericType();
+				if (type instanceof ParameterizedType) {
+					Type[] argTps = ((ParameterizedType)type).getActualTypeArguments();
+					ArrayList<Class<?>> klasses = new ArrayList<>(argTps.length);
+					for (Type t : argTps) {
+						klasses.add((Class<?>)t);
+					}
+					return klasses;
+				}
+			}
+		}
+		// no such field
+		throw new NoSuchFieldException(
+				"cannnot find field of name[" + fieldName 
+				+ "] in class [" + klass.getName() + "]");
+	}
 	
 	/**
 	 * find setter by fieldName from public methods of the class
@@ -34,11 +68,11 @@ public final class TypeTraits {
 	 * @return
 	 * @throws NoSuchMethodException 
 	 */
+	@Nullable
 	public static Method findSetter(Class<?> clazz, String fieldName) throws NoSuchMethodException {
 
 		String setterName = String.format("set%C%s",
 				fieldName.charAt(0), fieldName.substring(1));
-//System.out.println(fieldName + "   " + clazz.getName());
 		for (Method method : clazz.getMethods()) {
 
 			if(method.getName().equals(setterName)
@@ -46,10 +80,7 @@ public final class TypeTraits {
 				return method;
 			}
 		}
-		// no such field
-		throw new NoSuchMethodException(
-				"cannnot find setter for [" + fieldName 
-				+ "] in class [" + clazz.getName() + "]");
+		return null;
 	}
 	
 	/**
@@ -58,6 +89,7 @@ public final class TypeTraits {
 	 * @return
 	 * @throws NoSuchMethodException 
 	 */
+	@Nullable
 	public static Method findGetter(Class<?> clazz, String fieldName) throws NoSuchMethodException {
 
 		Field[] fields = clazz.getDeclaredFields();
@@ -100,23 +132,21 @@ public final class TypeTraits {
 				}
 			} // else
 		}
-		// no such field
-		throw new NoSuchMethodException(
-				"cannnot find getter for [" + fieldName 
-				+ "] in class [" + clazz.getName() + "]");
+		
+		return null;
 	}
 	
 	public static Class<?> getClass(Type type, int i) {
 		
-        if (type instanceof ParameterizedType) { // ���?������
+        if (type instanceof ParameterizedType) {
         	
             return getGenericClass((ParameterizedType) type, i);
             
         } else if (type instanceof TypeVariable) {
         	
-            return (Class<?>) getClass(((TypeVariable<?>) type).getBounds()[0], 0); // ���?�Ͳ��ö���<R>
+            return (Class<?>) getClass(((TypeVariable<?>) type).getBounds()[0], 0);
         
-        } else {// class����Ҳ��type��ǿ��ת��
+        } else {
             return (Class<?>) type;
         }
     }
@@ -147,6 +177,15 @@ public final class TypeTraits {
     	assignField(object, fieldName, var, false);
     }
 	
+    /**
+     * set field of this name with this var
+     * @param object
+     * @param fieldName
+     * @param var
+     * @param refPrivate whether set accessble or not
+     * @throws IllegalAccessException
+     * @throws NoSuchFieldException
+     */
     public static void assignField(Object object,
     								String fieldName, 
     								Object var,
@@ -163,13 +202,13 @@ public final class TypeTraits {
 				Object realVar = null;
 				
 				if (var instanceof String) {
-					realVar = Converter.castStr((String)var, fieldClazz);
+					realVar = Converter.slient.translateStr((String)var, fieldClazz);
 				} else if (var instanceof Number) {
 					realVar = Converter.castNumber((Number)var, fieldClazz);
 				} else {
 					realVar = var;
 				}
-//				if (isAssignableFrom(fieldClazz, realVar.getClass())) {
+				if (Klass.isAssignable(fieldClazz, realVar.getClass())) {
 					if ( !field.isAccessible()) {
 						if (refPrivate) {
 							field.setAccessible(true);
@@ -178,31 +217,17 @@ public final class TypeTraits {
 						}
 					}
 					field.set(object, realVar);
-//				} else {
-//					throw new IllegalArgumentException(
-//							"cannot assign " + realVar + " to field " + fieldName);
-//				}
+				} else {
+					throw new IllegalArgumentException(
+							"cannot assign " + realVar + " to field " + fieldName);
+				}
 				return;
 			}
 		}
     	throw new NoSuchFieldException(
     			"cannot find [" + fieldName + "] in class [" + clazz.getName() + "]");
 	}
-    
-	public static boolean isAssignableFrom(Class<?> a, Class<?> b) {
-		
-		if (a.isAssignableFrom(b)) {
-			return true;
-		} else {
-			a.isAnnotation();
-			a.isArray();
-			a.isEnum();
-			a.isInterface();
-			a.isPrimitive();
-			a.isSynthetic();
-			return false;
-		}
-	}
+
 	private TypeTraits(){}
 }
 

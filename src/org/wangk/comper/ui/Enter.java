@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 WangKang.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     WangKang - initial API and implementation
+ ******************************************************************************/
 package org.wangk.comper.ui;
 
 import java.awt.BorderLayout;
@@ -20,6 +30,7 @@ import javax.swing.JTextField;
 import javax.swing.JComboBox;
 
 import org.wangk.comper.context.AppContext;
+import org.wangk.comper.dao.DAOQuestion;
 import org.wangk.comper.feature.model.QuestionType;
 import org.wangk.comper.model.WKQuestionContent;
 import org.wangk.comper.model.WKQuestionMeta;
@@ -263,7 +274,7 @@ public class Enter extends JDialog {
 		System.out.println("Enter.getAll()");
 		System.out.println(meta.toString());
 		System.out.println(qc.toString());
-		AppContext.daoQuestion.saveWithContent(meta, qc);
+		((DAOQuestion)AppContext.beanAssembler.getBean("daoQuestion")).saveWithContent(meta, qc);
 		System.out.println("Enter.getAll()");
 		
 		/*

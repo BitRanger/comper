@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  * 
  * Contributors:
- *    WangKang. - initial API and implementation
+ *     WangKang - initial API and implementation
  ******************************************************************************/
 /**
  * @author BowenCai

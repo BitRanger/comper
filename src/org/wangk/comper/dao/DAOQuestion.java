@@ -1,12 +1,17 @@
 /*******************************************************************************
- * Copyright (c) 2014 WangKang.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the GNU Public License v3.0
- * which accompanies this distribution, and is available at
- * http://www.gnu.org/licenses/gpl.html
+ * Copyright 2014 Cai Bowen Zhou Liangpeng
  * 
- * Contributors:
- *    WangKang. - initial API and implementation
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  ******************************************************************************/
 package org.wangk.comper.dao;
 
@@ -112,7 +117,24 @@ public class DAOQuestion {
 		jdbcAux.execute(getUpdateStmt(meta));
 	}
 	
+	public void updateContent(final int metaId, final WKQuestionContent content) {
+		jdbcAux.update(new StatementCreator() {
+			@Override
+			public PreparedStatement createStatement(Connection con)
+					throws SQLException {
+				PreparedStatement ps = con.prepareStatement(
+				"update wk_question set content=?, answer=?,comment=? where id_mate=?");
+				ps.setString(1, content.content);
+				ps.setString(2, content.answer);
+				ps.setString(3, content.comment);
+				ps.setInt(4, metaId);
+				return ps;
+			}
+		});
+	}
+	
 	public void delete(int id) {
+		jdbcAux.execute("DELETE FROM wk_question where id_meta = ?", id);
 		jdbcAux.execute("DELETE FROM wk_question_meta where id = ?", id);
 	}
 	
@@ -134,12 +156,13 @@ public class DAOQuestion {
 				PreparedStatement ps = con.prepareStatement(
 						"update wk_question_meta "
 						+ "set id_paper=?, id_chapter=?, type=?,"
-						+ "difficulty=?, score=?");
+						+ "difficulty=?, score=? where id=?");
 				ps.setInt(1, meta.id_paper);
 				ps.setInt(2, meta.id_chapter);
 				ps.setInt(3, meta.type.intValue());
 				ps.setDouble(4, meta.difficulty);
 				ps.setInt(5, meta.score);
+				ps.setInt(6, meta.id);
 				return ps;
 			}
 		};

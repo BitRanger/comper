@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2014 Cai Bowen Zhou Liangpeng
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package org.wangk.comper.dao;
 
 import java.sql.Connection;
@@ -13,6 +28,7 @@ import org.wangk.comper.db.jdbc.JdbcUtil;
 import org.wangk.comper.db.jdbc.stmt.StatementCreator;
 import org.wangk.comper.db.orm.RowMapping;
 import org.wangk.comper.model.WKChapter;
+import org.wangk.comper.model.WKQuestionMeta;
 
 public class DAOChapter {
 
@@ -52,8 +68,24 @@ public class DAOChapter {
 		});
 	}
 	
+	public void update(final WKChapter chapter) {
+		jdbcAux.update(new StatementCreator() {
+			@Override
+			public PreparedStatement createStatement(Connection con)
+					throws SQLException {
+				PreparedStatement ps = con.prepareStatement(
+				"update wk_chapter set name=?,description=? where id=?");
+				ps.setString(1, chapter.name);
+				ps.setString(2, chapter.description);
+				ps.setInt(3, chapter.id);
+				return ps;
+			}
+		});
+	}
+	
 	public void delete(int id) {
 		jdbcAux.execute("delete from wk_chapter where id = ?", id);
+		jdbcAux.execute("DELETE from wk_question_meta where id_chapter = ?", id);
 	}
 	
 	private static final RowMapping<WKChapter> MAPPING = new RowMapping<WKChapter>() {

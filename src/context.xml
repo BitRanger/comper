@@ -19,10 +19,10 @@
 	<bean id="jdbcAux" class="org.wangk.comper.db.jdbc.JdbcAux">
 		<property name="dataSource" ref="datasource"/>
 	</bean>
-	
 	<bean id="daoQuestion" class="org.wangk.comper.dao.DAOQuestion">
 		<property name="jdbcAux" ref="jdbcAux"/>
 	</bean>
+	
 	<bean id="daoPaper" class="org.wangk.comper.dao.DAOPaper">
 		<property name="jdbcAux" ref="jdbcAux"/>
 	</bean>
@@ -34,4 +34,19 @@
 		<property name="daoQuestion" ref="daoQuestion"/>
 	</bean>
 	
+	<bean id="trainingField" class="org.wangk.comper.feature.TrainingField">
+		<property name="evaluator" instance="org.wangk.comper.feature.impl.Evaluator"/>
+		<property name="randomGenerator" instance="org.wangk.comper.feature.impl.RandomGenerator"/>
+		<property name="trainer">
+			<bean class="org.wangk.comper.feature.impl.Trainer">
+				<property name="questionSerive" ref="questionService"/>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="htmlGenerator" class="org.wangk.comper.feature.builder.HtmlGenerator">
+	</bean>
+	
 </beas>
+
+

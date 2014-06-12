@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 WangKang.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     WangKang - initial API and implementation
+ ******************************************************************************/
 package org.wangk.comper.ui;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -15,6 +25,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextArea;
 
 import org.wangk.comper.context.AppContext;
+import org.wangk.comper.dao.DAOPaper;
 import org.wangk.comper.model.WKChapter;
 import org.wangk.comper.model.WKPaper;
 import org.wangk.comper.util.Str;
@@ -141,7 +152,7 @@ public class Paper extends JDialog {
 	public boolean writeToDB()
 	{
 //		wkPaper -> db;
-		AppContext.daoPaper.save(wkPaper);
+		((DAOPaper)AppContext.beanAssembler.getBean("daoPaper")).save(wkPaper);
 		return true;
 	}
 	

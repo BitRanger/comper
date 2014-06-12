@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 WangKang.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     WangKang - initial API and implementation
+ ******************************************************************************/
 package org.wangk.comper.ui;
 
 import org.wangk.comper.context.AppContext;
@@ -193,7 +203,7 @@ public class Choose extends JDialog {
 //		point = new JComboBox(kno_point);
 		point = new JComboBox<>();
 		
-		List<WKChapter> chapters = AppContext.daoChapter.getAll();
+		List<WKChapter> chapters = ((DAOChapter)AppContext.beanAssembler.getBean("daoChapter")).getAll();
 		int id = chapters.get(0).id;
 		int size =  chapters.size();
 		List<Integer> ids = new ArrayList<>();
@@ -333,10 +343,16 @@ public class Choose extends JDialog {
 						// TODO Auto-generated method stub
 						//double hard = 0.2;//(double) spinner_hard.getValue();
 //						int iiiiii=  slider_hard.get
+						
+						if(part_score!=100)
+						{
+							JOptionPane.showMessageDialog(null, "请输入100分的题","总分错误",JOptionPane.WARNING_MESSAGE);
+							return;
+						}
 						float hard =Float.parseFloat(comboBox_hard.getSelectedObjects()[0]+"") ;
 						SystemConfig temp = SystemConfig.getDefault();
 						hard = (hard - 1) / 10 * (temp.DIFF_UPPER - temp.DIFF_LOWER) + temp.DIFF_LOWER;
-						
+//						xxx
 //						System.out
 //								.println("Choose.Choose(...).new ActionListener() {...}.actionPerformed()");
 //						System.out.println("hard["+ hard);
@@ -393,6 +409,9 @@ public class Choose extends JDialog {
 //							typeMap.put(QuestionType.APPLICATION, app_problem);
 														
 							float tole = 0.02f;
+							
+							
+							
 							
 							if(range_Set.isEmpty())
 							{

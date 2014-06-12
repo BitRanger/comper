@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2014 Cai Bowen Zhou Liangpeng
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package test.gen;
 
 import java.util.List;
@@ -5,26 +20,40 @@ import java.util.Random;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.wangk.comper.context.AppContext;
+import org.wangk.comper.dao.DAOChapter;
+import org.wangk.comper.dao.DAOPaper;
+import org.wangk.comper.dao.DAOQuestion;
+import org.wangk.comper.db.jdbc.JdbcAux;
 import org.wangk.comper.feature.impl.RandomGenerator;
 import org.wangk.comper.feature.model.QuestionType;
 import org.wangk.comper.model.WKChapter;
 import org.wangk.comper.model.WKPaper;
 import org.wangk.comper.model.WKQuestionMeta;
+import org.wangk.comper.util.Str.date;
 
 import test.comper.jdbc.DBConnection;
 
-public class Gen extends DBConnection {
+public class Gen {
 
 	RandomGenerator rand = new RandomGenerator();
 	Random random = new Random();
 
 	List<WKPaper> papers;
 	List<WKChapter> chapters;
-	
+	JdbcAux jdbc;
+
+	DAOPaper daoPaper;
+	DAOQuestion daoQuestion;
+	DAOChapter daoChapter;
 	@Before
 	public void setUp() throws Exception {
-		connect();
-//		jdbc.execute("delete from wk_question_meta");
+		AppContext.setUp();
+		jdbc = AppContext.beanAssembler.getBean("jdbcAux");
+
+		daoPaper = AppContext.beanAssembler.getBean("daoPaper");
+		daoQuestion = AppContext.beanAssembler.getBean("daoQuestion");
+		daoChapter = AppContext.beanAssembler.getBean("daoChapter");
 	}
 
 
@@ -94,6 +123,12 @@ public class Gen extends DBConnection {
 		populateDB(QuestionType.APPLICATION, 1, 28);
 		populateDB(QuestionType.APPLICATION, 2, 20);
 
+		/**
+		 * 调整随机生成的题目难度值，避免极化数据
+		 */
+		jdbc.execute("update wk_question_meta set difficulty = difficulty + 0.1 where difficulty < 0.15 ");
+		jdbc.execute("update wk_question_meta set difficulty = difficulty - 0.1 where difficulty > 0.95 ");
+		
 		List<WKQuestionMeta> questionMetas = daoQuestion.getAll();
 
 		System.out.println(questionMetas.size());

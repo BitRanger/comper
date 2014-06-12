@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 WangKang.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     WangKang - initial API and implementation
+ ******************************************************************************/
 package org.wangk.comper.ui;
 
 import java.awt.Color;
@@ -16,14 +26,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import org.wangk.comper.context.AppContext;
+import org.wangk.comper.dao.QuestionService;
 import org.wangk.comper.feature.Config;
-import org.wangk.comper.feature.IEvaluator;
-import org.wangk.comper.feature.IRandomGenerator;
 import org.wangk.comper.feature.TrainingField;
-import org.wangk.comper.feature.builder.HtmlGenerator;
-import org.wangk.comper.feature.impl.Evaluator;
-import org.wangk.comper.feature.impl.RandomGenerator;
-import org.wangk.comper.feature.impl.Trainer;
+import org.wangk.comper.feature.builder.IHtmlGen;
 import org.wangk.comper.feature.model.Group;
 import org.wangk.comper.feature.model.TestPaper;
 
@@ -36,7 +42,7 @@ public class Ui {
 
 	JFrame frame;
 	Config config;
-	HtmlGenerator htmlGenerator = new HtmlGenerator();
+	IHtmlGen htmlGenerator;
 	
 	private JLabel label_score;
 	private JLabel label_hard;
@@ -82,6 +88,10 @@ public class Ui {
 
 	// 编辑菜单
 	JMenu menuEidt;
+	
+	JMenu menuAdd;
+	
+	JMenu menuModify;
 
 	// 视图菜单
 	JMenu menuView;
@@ -92,8 +102,9 @@ public class Ui {
 	// 帮助菜单
 	JMenu menuHelp;
 
-	JMenuItem itemOpen, itemNew, itemCopy, itemPrint, itemPaste, itemSave,
-			itemSavaAs, itemExport,itemModify,itemEnter,itemAddChapter,itemAddPaper;
+	JMenuItem 	itemOpen, itemNew, itemCopy, itemPrint, itemPaste, itemSave,
+				itemSavaAs, itemExport,itemAddQuestion,itemAddChapter,itemAddPaper,
+				itemModifyQuestion,itemModifCHapter,itemModifyPaper,itemHelp;
 
 	public Ui() {
 		initialize();
@@ -124,23 +135,20 @@ public class Ui {
 
 		menuBar = new JMenuBar();
 		menuFile = new JMenu("文件");
-		menuEidt = new JMenu("编辑");
+		menuEidt = new JMenu("添加");
 		menuView = new JMenu("视图");
 		menuWindow = new JMenu("窗口");
+		menuModify = new JMenu("修改");
+		menuAdd = new JMenu("添加");
 		menuHelp = new JMenu("帮助");
+		
+	
 	
 
 		/**
 		 * 创建各个菜单项
 		 */
-		itemEnter = new JMenuItem("添加试题");
-		itemEnter.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Enter enter = new Enter("添加试题");
-				enter.setVisible(true);
-			}
-		});
+		
 		itemOpen = new JMenuItem("打开...");
 		itemNew = new JMenuItem("新建");
 		itemCopy = new JMenuItem("复制");
@@ -149,22 +157,89 @@ public class Ui {
 		itemSavaAs = new JMenuItem("另存为");
 		itemSave = new JMenuItem("保存");
 		itemExport = new JMenuItem("导出");
-		itemModify = new JMenuItem("题库修改");
-		itemModify.addActionListener(new ActionListener() {
+		
+		itemExport.addActionListener(new ActionListener() {
+			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				Modify modify = new Modify();
-				
-				modify.setVisible(true);
+				if(config==null)
+				{
+					JOptionPane.showMessageDialog(null, "请先点击生成试卷","error",JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				// TODO Auto-generated method stub
+				//if(config.getDifficulty() == null)
+				System.out
+						.println("Ui.initialize().new ActionListener() {...}.actionPerformed()");
+				System.out.println("hard"+config.getDifficulty());
+				//setAll();
+				JOptionPane.showMessageDialog(null, "生成成功", "成功", JOptionPane.INFORMATION_MESSAGE);
+				htmlGenerator.output("test_paper.html");
+				System.err
+						.println("Ui.initialize().new ActionListener() {...}.actionPerformed()");
+			}
+		});		
+		
+		itemModifyQuestion = new JMenuItem("修改题目");
+		itemModifyQuestion.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JFrame frame = new JFrame();
+				frame.setTitle("修改题目");
+				frame.add(new ModifyQuestion());
+				frame.setBounds(100, 50, 1100, 600);
+				frame.setVisible(true);
 			}
 		});
+		itemModifCHapter = new JMenuItem("修改知识点");
+		itemModifCHapter.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				JFrame frame = new JFrame();
+				frame.setTitle("修改知识点");
+//				frame.add(new Modify());
+				frame.add(new ModifyChapter());
+				//frame.setSize(new Dimension(1000, 600));
+				frame.setBounds(100, 50, 1100, 600);
+				frame.setVisible(true);
+				
+			}
+		});
+		
+		itemModifyPaper = new  JMenuItem("修改试卷");
+		itemModifyPaper.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				JFrame frame = new JFrame();
+				frame.setTitle("修改试卷");
+//				frame.add(new Modify());
+				frame.add(new ModifyPaper());
+				//frame.setSize(new Dimension(1000, 600));
+				frame.setBounds(100, 50, 1100, 600);
+				frame.setVisible(true);
+			}
+		});
+		
+		itemAddQuestion = new JMenuItem("添加试题");
+		itemAddQuestion.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				AddQuestion enter = new AddQuestion("添加试题");
+				enter.setVisible(true);
+			}
+		});
+		
 		itemAddPaper = new JMenuItem("添加试卷");
 		itemAddPaper.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
-				Paper paper =new Paper();
+				AddPaper paper =new AddPaper();
 				paper.setVisible(true);
 				
 			}
@@ -176,8 +251,18 @@ public class Ui {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
-				Chapter chapter = new Chapter();
+				AddChapter chapter = new AddChapter();
 				chapter.setVisible(true);
+			}
+		});
+		
+		itemHelp = new JMenuItem("版本");
+		itemHelp.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				JOptionPane.showMessageDialog(null,"欢迎使用组卷系统，\n 开发人：WK\n 版本：1.0.3","帮助",JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 
@@ -191,21 +276,30 @@ public class Ui {
 		//menuFile.add(itemSave);
 		menuFile.add(itemExport);
 
-		menuEidt.add(itemCopy);
-		menuEidt.add(itemPaste);
-		menuEidt.add(itemModify);
-		menuEidt.add(itemEnter);
-		menuEidt.add(itemAddChapter);
-		menuEidt.add(itemAddPaper);
+//		menuEidt.add(itemCopy);
+//		menuEidt.add(itemPaste);
+		menuModify.add(itemModifyQuestion);
+		menuModify.add(itemModifCHapter);
+		menuModify.add(itemModifyPaper);
+		
+		//menuEidt.add(itemAddQuestion);
+		//menuEidt.add(itemAddChapter);
+		//menuEidt.add(itemAddPaper);
+		
+		menuAdd.add(itemAddQuestion);
+		menuAdd.add(itemAddChapter);
+		menuAdd.add(itemAddPaper);
+		
+		menuHelp.add(itemHelp);
 
 		/**
 		 * 将各个菜单加入菜单栏
 		 */
 
 		menuBar.add(menuFile);
-		menuBar.add(menuEidt);
+		menuBar.add(menuModify);
 		//menuBar.add(menuView);
-		//menuBar.add(menuWindow);
+		menuBar.add(menuAdd);
 		menuBar.add(menuHelp);
 
 		frame.setJMenuBar(menuBar);
@@ -267,12 +361,19 @@ System.out.println(config);
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
-				comboBox_replace.addItem(backSolution[0]);
-				comboBox_replace.addItem(backSolution[1]);
-				comboBox_replace.addItem(backSolution[2]);				
-				if(getPaper())
-					JOptionPane.showMessageDialog(null, "生成成功", "成功", JOptionPane.INFORMATION_MESSAGE);
-				textArea.setText(result[0]);
+				
+				if(config == null)
+					JOptionPane.showMessageDialog(null, "请先选择题目的各个参数", "error", JOptionPane.WARNING_MESSAGE);
+				else {
+					comboBox_replace.addItem(backSolution[0]);
+					comboBox_replace.addItem(backSolution[1]);
+					comboBox_replace.addItem(backSolution[2]);				
+					if(getPaper())
+						JOptionPane.showMessageDialog(null, "生成成功", "成功", JOptionPane.INFORMATION_MESSAGE);
+					textArea.setText(result[0]);
+				}
+				
+				
 				
 			}
 		});
@@ -346,9 +447,9 @@ System.out.println(config);
 		js.setBounds(20, 72, 560, 483);
 		frame.getContentPane().add(js);
 
-		JButton btnHtml = new JButton("导出HTML");
+		JButton btnHtml = new JButton("导出HTML和doc");
 		btnHtml.setFont(new Font("宋体", Font.PLAIN, 20));
-		btnHtml.setBounds(435, 27, 137, 39);
+		btnHtml.setBounds(357, 27, 215, 39);
 		frame.getContentPane().add(btnHtml);
 		btnHtml.addActionListener(new ActionListener() {
 			
@@ -356,7 +457,7 @@ System.out.println(config);
 			public void actionPerformed(ActionEvent arg0) {
 				if(config==null)
 				{
-					JOptionPane.showMessageDialog(null, "error","123123",JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "请先点击生成试卷","error",JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				// TODO Auto-generated method stub
@@ -387,15 +488,7 @@ System.out.println(config);
 		/**
 		 * 计算结果：
 		 */
-		IEvaluator evaluator = new Evaluator();
-		Trainer trainer = new Trainer();
-		trainer.setQuestionSerive(AppContext.questionService);
-		
-		IRandomGenerator rGenerator = new RandomGenerator();
-
-		field.setEvaluator(evaluator);
-		field.setRandomGenerator(rGenerator);
-		field.setTrainer(trainer);
+		field = AppContext.beanAssembler.getBean("trainingField");
 	}
 	
 	/*
@@ -411,19 +504,20 @@ System.out.println(config);
 		System.out.println("Ui.getPaper()");
 		List<Group> groups = field.getSortedResult();
 		System.out.println("Ui.getPaper()");
+		htmlGenerator = AppContext.beanAssembler.getBean("htmlGenerator");
 		htmlGenerator.clear();
 		htmlGenerator.setConfig(config);
 		
-		
-		TestPaper paper = AppContext.questionService.toPaper(groups.get(groups.size() - 1));
+		QuestionService questionService = AppContext.beanAssembler.getBean("questionService");
+		TestPaper paper = questionService.toPaper(groups.get(groups.size() - 1));
 		htmlGenerator.add(paper);
 		result[0] = paper.toString();
 		
-		paper = AppContext.questionService.toPaper(groups.get(groups.size() - 2));
+		paper = questionService.toPaper(groups.get(groups.size() - 2));
 		htmlGenerator.add(paper);
 		result[1] = paper.toString();
 		
-		paper = AppContext.questionService.toPaper(groups.get(groups.size() - 3));
+		paper = questionService.toPaper(groups.get(groups.size() - 3));
 		htmlGenerator.add(paper);
 		result[2] = paper.toString();
 		
