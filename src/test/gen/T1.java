@@ -1,17 +1,12 @@
 /*******************************************************************************
- * Copyright 2014 Cai Bowen Zhou Liangpeng
+ * Copyright (c) 2014 Cai Bowen, Zhou Liangpeng.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser Public License v2.1
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Contributors:
+ *     Cai Bowen,  Zhou Liangpeng. - initial API and implementation
  ******************************************************************************/
 package test.gen;
 
@@ -22,22 +17,22 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import org.blacklancer.comper.feature.Config;
+import org.blacklancer.comper.feature.IEvaluator;
+import org.blacklancer.comper.feature.IRandomGenerator;
+import org.blacklancer.comper.feature.SystemConfig;
+import org.blacklancer.comper.feature.TrainingField;
+import org.blacklancer.comper.feature.impl.Evaluator;
+import org.blacklancer.comper.feature.impl.RandomGenerator;
+import org.blacklancer.comper.feature.impl.Trainer;
+import org.blacklancer.comper.feature.model.Group;
+import org.blacklancer.comper.feature.model.QuestionType;
+import org.blacklancer.comper.util.Pair;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.wangk.comper.feature.Config;
-import org.wangk.comper.feature.IEvaluator;
-import org.wangk.comper.feature.IRandomGenerator;
-import org.wangk.comper.feature.SystemConfig;
-import org.wangk.comper.feature.TrainingField;
-import org.wangk.comper.feature.impl.Evaluator;
-import org.wangk.comper.feature.impl.RandomGenerator;
-import org.wangk.comper.feature.impl.Trainer;
-import org.wangk.comper.feature.model.Group;
-import org.wangk.comper.feature.model.QuestionType;
-import org.wangk.comper.util.Pair;
 
-import test.comper.jdbc.DBConnection;
+import test.jdbc.DBConnection;
 
 public class T1 extends DBConnection {
 

@@ -16,35 +16,35 @@
 		<property name="jdbcUrl" value="jdbc:sqlite:comper.db"/>
 	</bean>
 	
-	<bean id="jdbcAux" class="org.wangk.comper.db.jdbc.JdbcAux">
+	<bean id="jdbcAux" class="org.blacklancer.comper.db.jdbc.JdbcAux">
 		<property name="dataSource" ref="datasource"/>
 	</bean>
-	<bean id="daoQuestion" class="org.wangk.comper.dao.DAOQuestion">
+	<bean id="daoQuestion" class="org.blacklancer.comper.dao.DAOQuestion">
 		<property name="jdbcAux" ref="jdbcAux"/>
 	</bean>
 	
-	<bean id="daoPaper" class="org.wangk.comper.dao.DAOPaper">
+	<bean id="daoPaper" class="org.blacklancer.comper.dao.DAOPaper">
 		<property name="jdbcAux" ref="jdbcAux"/>
 	</bean>
-		<bean id="daoChapter" class="org.wangk.comper.dao.DAOChapter">
+		<bean id="daoChapter" class="org.blacklancer.comper.dao.DAOChapter">
 		<property name="jdbcAux" ref="jdbcAux"/>
 	</bean>
 	
-	<bean id="questionService" class="org.wangk.comper.dao.QuestionService">
+	<bean id="questionService" class="org.blacklancer.comper.dao.QuestionService">
 		<property name="daoQuestion" ref="daoQuestion"/>
 	</bean>
 	
-	<bean id="trainingField" class="org.wangk.comper.feature.TrainingField">
-		<property name="evaluator" instance="org.wangk.comper.feature.impl.Evaluator"/>
-		<property name="randomGenerator" instance="org.wangk.comper.feature.impl.RandomGenerator"/>
+	<bean id="trainingField" class="org.blacklancer.comper.feature.TrainingField">
+		<property name="evaluator" instance="org.blacklancer.comper.feature.impl.Evaluator"/>
+		<property name="randomGenerator" instance="org.blacklancer.comper.feature.impl.RandomGenerator"/>
 		<property name="trainer">
-			<bean class="org.wangk.comper.feature.impl.Trainer">
+			<bean class="org.blacklancer.comper.feature.impl.Trainer">
 				<property name="questionSerive" ref="questionService"/>
 			</bean>
 		</property>
 	</bean>
 	
-	<bean id="htmlGenerator" class="org.wangk.comper.feature.builder.HtmlGenerator">
+	<bean id="htmlGenerator" class="org.blacklancer.comper.feature.builder.HtmlGenerator">
 	</bean>
 	
 </beas>
