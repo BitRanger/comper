@@ -117,9 +117,13 @@ public class TrainingField {
 		train();
 	}
 	
+	/**
+	 * 迭代次数超过阈值，增加容忍度以尽快结束运算，避免计算时间过长
+	 * @param count
+	 */
 	private void adjust(int count) {
 
-		System.out.print("TrainingField.adjust()  " + config.getTolerance());
+//		System.out.print("TrainingField.adjust()  " + config.getTolerance());
 		if (count * 5 / 10 > config.internal.maxTraining) {
 			config.setTolerance(config.getTolerance() + 0.0005F);
 			System.out.println(config.getTolerance());

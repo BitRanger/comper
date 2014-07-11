@@ -36,7 +36,7 @@ public class Evaluator implements IEvaluator{
 		int currentStamp = (int) (group.hashCode()
 									* config.internal.weightCoverage 
 									* config.internal.weightDifficulty);
-		
+		// 种群或评估条件变了，重新计算
 		if (group.summary.stamp != currentStamp) {
 			final float coverage = getCoverage(group);
 			final float difficulty = getDifficulty(group);

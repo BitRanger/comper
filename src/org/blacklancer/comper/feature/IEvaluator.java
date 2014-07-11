@@ -28,6 +28,7 @@ public interface IEvaluator extends IRefreshable {
 	 * @return
 	 */
 	public void evaluate(Group group);
+	
 	/**
 	 * 评估一个表的组，依次将结果设置给每个组
 	 * @param groups

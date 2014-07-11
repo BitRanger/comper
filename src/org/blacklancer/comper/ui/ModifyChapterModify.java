@@ -10,17 +10,12 @@
  ******************************************************************************/
 package org.blacklancer.comper.ui;
 import java.awt.BorderLayout;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLData;
-
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
@@ -29,12 +24,16 @@ import javax.swing.JTextArea;
 import org.blacklancer.comper.AppContext;
 import org.blacklancer.comper.dao.DAOChapter;
 import org.blacklancer.comper.model.WKChapter;
-import org.blacklancer.comper.model.WKPaper;
 import org.blacklancer.comper.util.Str;
 
 
 public class ModifyChapterModify extends JDialog {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2659718340091665705L;
+	
 	private final JPanel contentPanel = new JPanel();
 	private JTextField paperName;
 	private JTextArea paperDescription;

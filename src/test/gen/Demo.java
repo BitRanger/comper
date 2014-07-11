@@ -18,7 +18,6 @@ import java.util.Random;
 import java.util.Set;
 
 import org.blacklancer.comper.AppContext;
-import org.blacklancer.comper.dao.DAOPaper;
 import org.blacklancer.comper.dao.QuestionService;
 import org.blacklancer.comper.feature.Config;
 import org.blacklancer.comper.feature.SystemConfig;
@@ -27,7 +26,6 @@ import org.blacklancer.comper.feature.builder.HtmlGenerator;
 import org.blacklancer.comper.feature.model.Group;
 import org.blacklancer.comper.feature.model.QuestionType;
 import org.blacklancer.comper.feature.model.TestPaper;
-import org.blacklancer.comper.model.WKPaper;
 import org.blacklancer.comper.util.Pair;
 
 public class Demo {
@@ -103,21 +101,15 @@ public class Demo {
 		 * 导出为doc和html
 		 */
 		QuestionService questionService = AppContext.beanAssembler.getBean("questionService");
+		
+		HtmlGenerator generator = AppContext.beanAssembler.getBean("htmlGenerator");
+		generator.setConfig(config);
 		TestPaper paper = questionService.toPaper(groups.get(groups.size() - 1));
-//
-		System.out.println(paper);
-//		
-//		HtmlGenerator generator = AppContext.beanAssembler.getBean("htmlGenerator");
-//		generator.setConfig(config);
-//		generator.add(paper);
-//		paper = questionService.toPaper(groups.get(groups.size() - 2));
-//		generator.add(paper);
-//		
-//		paper = questionService.toPaper(groups.get(groups.size() - 3));
-//		generator.add(paper);
-//		
+		generator.add(paper);
+		paper = questionService.toPaper(groups.get(groups.size() - 2));
+		generator.add(paper);
 //		//导出为text.html 和 test.doc
-//		generator.output("test");
+		generator.output("test");
 
 	}
 

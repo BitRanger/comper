@@ -20,6 +20,7 @@ import org.blacklancer.comper.model.WKQuestionMeta;
 
 /**
  * 代表一套试卷
+ * 
  * @author BowenCai
  *
  */
@@ -51,8 +52,9 @@ public class Group implements Serializable, Comparable<Group> {
 //	public List<WKQuestionMeta> applicationLs;
 	
 	/**
-	 * 记录卷子信息
-	 * @author BowenCai
+	 * 记录卷子信息，相当于一个cache，
+	 * 避免Evaluator重复计算本组信息
+	 * @see IEvaluator public void evaluate(Group group)
 	 *
 	 */
 	public static class Summary {
