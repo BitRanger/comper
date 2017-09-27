@@ -1,11 +1,8 @@
 *.class
-*.htm
-*.html
 /ignore/
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
-/test/
-*/context/AppContext.java
+
 # Package Files #
 *.jar
 *.war
@@ -13,11 +10,11 @@
 *.zip
 *.7z
 *.db
-/doc
-doc/
+
 *.vsdx
 *.~vsdx
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 /bin
+s
